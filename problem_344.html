@@ -1,0 +1,832 @@
+<html><head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>KSI: Procházení stromů</title>
+    <meta name="description" content="KSI je soutěž pro středoškoláky. Baví tě informatika? Zapoj se! Projdi naším spletitým grafem úloh a získej co nejvíce bodů.">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="KSI,Korespondenční seminář z informatiky,FI,FI MU,FIMU,soutěž,student,středoškolák">
+    <meta name="author" content="Honza Mrázek,Heňo Lauko,Honza Horáček,Štoury">
+
+    <!-- icon -->
+    <link rel="shortcut icon" href="img/icon/ksi-icon-32x32.png">
+
+    <base href="/">
+<meta name="ksi/config/environment" content="%7B%22modulePrefix%22%3A%22ksi%22%2C%22environment%22%3A%22production%22%2C%22baseURL%22%3A%22/%22%2C%22locationType%22%3A%22auto%22%2C%22EmberENV%22%3A%7B%22FEATURES%22%3A%7B%7D%7D%2C%22contentSecurityPolicy%22%3A%7B%22default-src%22%3A%22%27self%27%20https%3A//ksi.fi.muni.cz%3A3000%20https%3A//rest.ksi.fi.muni.cz%22%2C%22connect-src%22%3A%22cdnjs.cloudflare.com%20https%3A//ksi.fi.muni.cz%3A3000%20https%3A//rest.ksi.fi.muni.cz%22%2C%22script-src%22%3A%22%27self%27%20cdnjs.cloudflare.com%20www.google-analytics.com%22%2C%22style-src%22%3A%22%27self%27%20%27unsafe-inline%27%20maxcdn.bootstrapcdn.com%20cdnjs.cloudflare.com%22%2C%22img-src%22%3A%22%27self%27%20www.google-analytics.com%20cdnjs.cloudflare.com%20data%3A%20https%3A//ksi.fi.muni.cz%3A3000%20https%3A//rest.ksi.fi.muni.cz%22%2C%22font-src%22%3A%22%27self%27%20maxcdn.bootstrapcdn.com%20cdnjs.cloudflare.com%20data%3A%22%2C%22child-src%22%3A%22youtube.com%20www.youtube.com%22%2C%22report-uri%22%3A%22https%3A//ksi.report-uri.io/r/default/csp/enforce%22%2C%22media-src%22%3A%5B%22%27self%27%22%5D%7D%2C%22contentSecurityPolicyHeader%22%3A%22Content-Security-Policy%22%2C%22APP%22%3A%7B%22name%22%3A%22ksi%22%2C%22version%22%3A%220.0.0+1491d1b6%22%7D%2C%22simple-auth%22%3A%7B%22authorizer%22%3A%22simple-auth-authorizer%3Aoauth2-bearer%22%2C%22store%22%3A%22simple-auth-session-store%3Alocal-storage%22%2C%22crossOriginWhitelist%22%3A%5B%22http%3A//localhost%3A3000%22%2C%22https%3A//localhost%3A3000%22%2C%22https%3A//kyzikos.fi.muni.cz%3A3000%22%2C%22https%3A//ksi.fi.muni.cz%3A3000%22%2C%22https%3A//rest.ksi.fi.muni.cz%22%5D%7D%2C%22API_LOC%22%3A%22https%3A//rest.ksi.fi.muni.cz%22%2C%22simple-auth-oauth2%22%3A%7B%22serverTokenEndpoint%22%3A%22https%3A//rest.ksi.fi.muni.cz/auth%22%7D%2C%22i18n%22%3A%7B%22defaultLocale%22%3A%22cs%22%7D%2C%22moment%22%3A%7B%22includeLocales%22%3Atrue%7D%2C%22exportApplicationGlobal%22%3Afalse%2C%22browserify%22%3A%7B%22tests%22%3Atrue%7D%2C%22ember-addon%22%3A%7B%22versionCompatibility%22%3A%7B%22ember%22%3A%22%3E%3D2.0.0%22%7D%7D%7D">
+
+    <link rel="stylesheet" href="assets/vendor.css">
+    <link rel="stylesheet" href="assets/ksi.css">
+
+    <!-- Custom Fonts -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <script async="" src="//www.google-analytics.com/analytics.js"></script><script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    </script>
+
+    <script type="text/javascript" src="/google-analytics.js"></script>
+
+    <noscript>Pro běh KSI je nutné zapnout javascript</noscript>
+
+
+    
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  <style type="text/css">.MathJax_Hover_Frame {border-radius: .25em; -webkit-border-radius: .25em; -moz-border-radius: .25em; -khtml-border-radius: .25em; box-shadow: 0px 0px 15px #83A; -webkit-box-shadow: 0px 0px 15px #83A; -moz-box-shadow: 0px 0px 15px #83A; -khtml-box-shadow: 0px 0px 15px #83A; border: 1px solid #A6D ! important; display: inline-block; position: absolute}
+.MathJax_Menu_Button .MathJax_Hover_Arrow {position: absolute; cursor: pointer; display: inline-block; border: 2px solid #AAA; border-radius: 4px; -webkit-border-radius: 4px; -moz-border-radius: 4px; -khtml-border-radius: 4px; font-family: 'Courier New',Courier; font-size: 9px; color: #F0F0F0}
+.MathJax_Menu_Button .MathJax_Hover_Arrow span {display: block; background-color: #AAA; border: 1px solid; border-radius: 3px; line-height: 0; padding: 4px}
+.MathJax_Hover_Arrow:hover {color: white!important; border: 2px solid #CCC!important}
+.MathJax_Hover_Arrow:hover span {background-color: #CCC!important}
+</style><style type="text/css">#MathJax_About {position: fixed; left: 50%; width: auto; text-align: center; border: 3px outset; padding: 1em 2em; background-color: #DDDDDD; color: black; cursor: default; font-family: message-box; font-size: 120%; font-style: normal; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; border-radius: 15px; -webkit-border-radius: 15px; -moz-border-radius: 15px; -khtml-border-radius: 15px; box-shadow: 0px 10px 20px #808080; -webkit-box-shadow: 0px 10px 20px #808080; -moz-box-shadow: 0px 10px 20px #808080; -khtml-box-shadow: 0px 10px 20px #808080; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+#MathJax_About.MathJax_MousePost {outline: none}
+.MathJax_Menu {position: absolute; background-color: white; color: black; width: auto; padding: 5px 0px; border: 1px solid #CCCCCC; margin: 0; cursor: default; font: menu; text-align: left; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; border-radius: 5px; -webkit-border-radius: 5px; -moz-border-radius: 5px; -khtml-border-radius: 5px; box-shadow: 0px 10px 20px #808080; -webkit-box-shadow: 0px 10px 20px #808080; -moz-box-shadow: 0px 10px 20px #808080; -khtml-box-shadow: 0px 10px 20px #808080; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+.MathJax_MenuItem {padding: 1px 2em; background: transparent}
+.MathJax_MenuArrow {position: absolute; right: .5em; padding-top: .25em; color: #666666; font-size: .75em}
+.MathJax_MenuActive .MathJax_MenuArrow {color: white}
+.MathJax_MenuArrow.RTL {left: .5em; right: auto}
+.MathJax_MenuCheck {position: absolute; left: .7em}
+.MathJax_MenuCheck.RTL {right: .7em; left: auto}
+.MathJax_MenuRadioCheck {position: absolute; left: .7em}
+.MathJax_MenuRadioCheck.RTL {right: .7em; left: auto}
+.MathJax_MenuLabel {padding: 1px 2em 3px 1.33em; font-style: italic}
+.MathJax_MenuRule {border-top: 1px solid #DDDDDD; margin: 4px 3px}
+.MathJax_MenuDisabled {color: GrayText}
+.MathJax_MenuActive {background-color: #606872; color: white}
+.MathJax_MenuDisabled:focus, .MathJax_MenuLabel:focus {background-color: #E8E8E8}
+.MathJax_ContextMenu:focus {outline: none}
+.MathJax_ContextMenu .MathJax_MenuItem:focus {outline: none}
+#MathJax_AboutClose {top: .2em; right: .2em}
+.MathJax_Menu .MathJax_MenuClose {top: -10px; left: -10px}
+.MathJax_MenuClose {position: absolute; cursor: pointer; display: inline-block; border: 2px solid #AAA; border-radius: 18px; -webkit-border-radius: 18px; -moz-border-radius: 18px; -khtml-border-radius: 18px; font-family: 'Courier New',Courier; font-size: 24px; color: #F0F0F0}
+.MathJax_MenuClose span {display: block; background-color: #AAA; border: 1.5px solid; border-radius: 18px; -webkit-border-radius: 18px; -moz-border-radius: 18px; -khtml-border-radius: 18px; line-height: 0; padding: 8px 0 6px}
+.MathJax_MenuClose:hover {color: white!important; border: 2px solid #CCC!important}
+.MathJax_MenuClose:hover span {background-color: #CCC!important}
+.MathJax_MenuClose:hover:focus {outline: none}
+</style><style type="text/css">.MathJax_Preview .MJXf-math {color: inherit!important}
+</style><style type="text/css">.MJX_Assistive_MathML {position: absolute!important; top: 0; left: 0; clip: rect(1px, 1px, 1px, 1px); padding: 1px 0 0 0!important; border: 0!important; height: 1px!important; width: 1px!important; overflow: hidden!important; display: block!important; -webkit-touch-callout: none; -webkit-user-select: none; -khtml-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none}
+.MJX_Assistive_MathML.MJX_Assistive_MathML_Block {width: 100%!important}
+</style><style type="text/css">#MathJax_Zoom {position: absolute; background-color: #F0F0F0; overflow: auto; display: block; z-index: 301; padding: .5em; border: 1px solid black; margin: 0; font-weight: normal; font-style: normal; text-align: left; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; -webkit-box-sizing: content-box; -moz-box-sizing: content-box; box-sizing: content-box; box-shadow: 5px 5px 15px #AAAAAA; -webkit-box-shadow: 5px 5px 15px #AAAAAA; -moz-box-shadow: 5px 5px 15px #AAAAAA; -khtml-box-shadow: 5px 5px 15px #AAAAAA; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+#MathJax_ZoomOverlay {position: absolute; left: 0; top: 0; z-index: 300; display: inline-block; width: 100%; height: 100%; border: 0; padding: 0; margin: 0; background-color: white; opacity: 0; filter: alpha(opacity=0)}
+#MathJax_ZoomFrame {position: relative; display: inline-block; height: 0; width: 0}
+#MathJax_ZoomEventTrap {position: absolute; left: 0; top: 0; z-index: 302; display: inline-block; border: 0; padding: 0; margin: 0; background-color: white; opacity: 0; filter: alpha(opacity=0)}
+</style><style type="text/css">.MathJax_Preview {color: #888}
+#MathJax_Message {position: fixed; left: 1px; bottom: 2px; background-color: #E6E6E6; border: 1px solid #959595; margin: 0px; padding: 2px 8px; z-index: 102; color: black; font-size: 80%; width: auto; white-space: nowrap}
+#MathJax_MSIE_Frame {position: absolute; top: 0; left: 0; width: 0px; z-index: 101; border: 0px; margin: 0px; padding: 0px}
+.MathJax_Error {color: #CC0000; font-style: italic}
+</style><style id="ace_editor.css">.ace_editor {position: relative;overflow: hidden;font: 12px/normal 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;direction: ltr;text-align: left;-webkit-tap-highlight-color: rgba(0, 0, 0, 0);}.ace_scroller {position: absolute;overflow: hidden;top: 0;bottom: 0;background-color: inherit;-ms-user-select: none;-moz-user-select: none;-webkit-user-select: none;user-select: none;cursor: text;}.ace_content {position: absolute;-moz-box-sizing: border-box;-webkit-box-sizing: border-box;box-sizing: border-box;min-width: 100%;}.ace_dragging .ace_scroller:before{position: absolute;top: 0;left: 0;right: 0;bottom: 0;content: '';background: rgba(250, 250, 250, 0.01);z-index: 1000;}.ace_dragging.ace_dark .ace_scroller:before{background: rgba(0, 0, 0, 0.01);}.ace_selecting, .ace_selecting * {cursor: text !important;}.ace_gutter {position: absolute;overflow : hidden;width: auto;top: 0;bottom: 0;left: 0;cursor: default;z-index: 4;-ms-user-select: none;-moz-user-select: none;-webkit-user-select: none;user-select: none;}.ace_gutter-active-line {position: absolute;left: 0;right: 0;}.ace_scroller.ace_scroll-left {box-shadow: 17px 0 16px -16px rgba(0, 0, 0, 0.4) inset;}.ace_gutter-cell {padding-left: 19px;padding-right: 6px;background-repeat: no-repeat;}.ace_gutter-cell.ace_error {background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAABOFBMVEX/////////QRswFAb/Ui4wFAYwFAYwFAaWGAfDRymzOSH/PxswFAb/SiUwFAYwFAbUPRvjQiDllog5HhHdRybsTi3/Tyv9Tir+Syj/UC3////XurebMBIwFAb/RSHbPx/gUzfdwL3kzMivKBAwFAbbvbnhPx66NhowFAYwFAaZJg8wFAaxKBDZurf/RB6mMxb/SCMwFAYwFAbxQB3+RB4wFAb/Qhy4Oh+4QifbNRcwFAYwFAYwFAb/QRzdNhgwFAYwFAbav7v/Uy7oaE68MBK5LxLewr/r2NXewLswFAaxJw4wFAbkPRy2PyYwFAaxKhLm1tMwFAazPiQwFAaUGAb/QBrfOx3bvrv/VC/maE4wFAbRPBq6MRO8Qynew8Dp2tjfwb0wFAbx6eju5+by6uns4uH9/f36+vr/GkHjAAAAYnRSTlMAGt+64rnWu/bo8eAA4InH3+DwoN7j4eLi4xP99Nfg4+b+/u9B/eDs1MD1mO7+4PHg2MXa347g7vDizMLN4eG+Pv7i5evs/v79yu7S3/DV7/498Yv24eH+4ufQ3Ozu/v7+y13sRqwAAADLSURBVHjaZc/XDsFgGIBhtDrshlitmk2IrbHFqL2pvXf/+78DPokj7+Fz9qpU/9UXJIlhmPaTaQ6QPaz0mm+5gwkgovcV6GZzd5JtCQwgsxoHOvJO15kleRLAnMgHFIESUEPmawB9ngmelTtipwwfASilxOLyiV5UVUyVAfbG0cCPHig+GBkzAENHS0AstVF6bacZIOzgLmxsHbt2OecNgJC83JERmePUYq8ARGkJx6XtFsdddBQgZE2nPR6CICZhawjA4Fb/chv+399kfR+MMMDGOQAAAABJRU5ErkJggg==");background-repeat: no-repeat;background-position: 2px center;}.ace_gutter-cell.ace_warning {background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAmVBMVEX///8AAAD///8AAAAAAABPSzb/5sAAAAB/blH/73z/ulkAAAAAAAD85pkAAAAAAAACAgP/vGz/rkDerGbGrV7/pkQICAf////e0IsAAAD/oED/qTvhrnUAAAD/yHD/njcAAADuv2r/nz//oTj/p064oGf/zHAAAAA9Nir/tFIAAAD/tlTiuWf/tkIAAACynXEAAAAAAAAtIRW7zBpBAAAAM3RSTlMAABR1m7RXO8Ln31Z36zT+neXe5OzooRDfn+TZ4p3h2hTf4t3k3ucyrN1K5+Xaks52Sfs9CXgrAAAAjklEQVR42o3PbQ+CIBQFYEwboPhSYgoYunIqqLn6/z8uYdH8Vmdnu9vz4WwXgN/xTPRD2+sgOcZjsge/whXZgUaYYvT8QnuJaUrjrHUQreGczuEafQCO/SJTufTbroWsPgsllVhq3wJEk2jUSzX3CUEDJC84707djRc5MTAQxoLgupWRwW6UB5fS++NV8AbOZgnsC7BpEAAAAABJRU5ErkJggg==");background-position: 2px center;}.ace_gutter-cell.ace_info {background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAAAAAA6mKC9AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAAJ0Uk5TAAB2k804AAAAPklEQVQY02NgIB68QuO3tiLznjAwpKTgNyDbMegwisCHZUETUZV0ZqOquBpXj2rtnpSJT1AEnnRmL2OgGgAAIKkRQap2htgAAAAASUVORK5CYII=");background-position: 2px center;}.ace_dark .ace_gutter-cell.ace_info {background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQBAMAAADt3eJSAAAAJFBMVEUAAAChoaGAgIAqKiq+vr6tra1ZWVmUlJSbm5s8PDxubm56enrdgzg3AAAAAXRSTlMAQObYZgAAAClJREFUeNpjYMAPdsMYHegyJZFQBlsUlMFVCWUYKkAZMxZAGdxlDMQBAG+TBP4B6RyJAAAAAElFTkSuQmCC");}.ace_scrollbar {position: absolute;right: 0;bottom: 0;z-index: 6;}.ace_scrollbar-inner {position: absolute;cursor: text;left: 0;top: 0;}.ace_scrollbar-v{overflow-x: hidden;overflow-y: scroll;top: 0;}.ace_scrollbar-h {overflow-x: scroll;overflow-y: hidden;left: 0;}.ace_print-margin {position: absolute;height: 100%;}.ace_text-input {position: absolute;z-index: 0;width: 0.5em;height: 1em;opacity: 0;background: transparent;-moz-appearance: none;appearance: none;border: none;resize: none;outline: none;overflow: hidden;font: inherit;padding: 0 1px;margin: 0 -1px;text-indent: -1em;-ms-user-select: text;-moz-user-select: text;-webkit-user-select: text;user-select: text;white-space: pre!important;}.ace_text-input.ace_composition {background: inherit;color: inherit;z-index: 1000;opacity: 1;text-indent: 0;}.ace_layer {z-index: 1;position: absolute;overflow: hidden;word-wrap: normal;white-space: pre;height: 100%;width: 100%;-moz-box-sizing: border-box;-webkit-box-sizing: border-box;box-sizing: border-box;pointer-events: none;}.ace_gutter-layer {position: relative;width: auto;text-align: right;pointer-events: auto;}.ace_text-layer {font: inherit !important;}.ace_cjk {display: inline-block;text-align: center;}.ace_cursor-layer {z-index: 4;}.ace_cursor {z-index: 4;position: absolute;-moz-box-sizing: border-box;-webkit-box-sizing: border-box;box-sizing: border-box;border-left: 2px solid;transform: translatez(0);}.ace_multiselect .ace_cursor {border-left-width: 1px;}.ace_slim-cursors .ace_cursor {border-left-width: 1px;}.ace_overwrite-cursors .ace_cursor {border-left-width: 0;border-bottom: 1px solid;}.ace_hidden-cursors .ace_cursor {opacity: 0.2;}.ace_smooth-blinking .ace_cursor {-webkit-transition: opacity 0.18s;transition: opacity 0.18s;}.ace_marker-layer .ace_step, .ace_marker-layer .ace_stack {position: absolute;z-index: 3;}.ace_marker-layer .ace_selection {position: absolute;z-index: 5;}.ace_marker-layer .ace_bracket {position: absolute;z-index: 6;}.ace_marker-layer .ace_active-line {position: absolute;z-index: 2;}.ace_marker-layer .ace_selected-word {position: absolute;z-index: 4;-moz-box-sizing: border-box;-webkit-box-sizing: border-box;box-sizing: border-box;}.ace_line .ace_fold {-moz-box-sizing: border-box;-webkit-box-sizing: border-box;box-sizing: border-box;display: inline-block;height: 11px;margin-top: -2px;vertical-align: middle;background-image:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABEAAAAJCAYAAADU6McMAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAJpJREFUeNpi/P//PwOlgAXGYGRklAVSokD8GmjwY1wasKljQpYACtpCFeADcHVQfQyMQAwzwAZI3wJKvCLkfKBaMSClBlR7BOQikCFGQEErIH0VqkabiGCAqwUadAzZJRxQr/0gwiXIal8zQQPnNVTgJ1TdawL0T5gBIP1MUJNhBv2HKoQHHjqNrA4WO4zY0glyNKLT2KIfIMAAQsdgGiXvgnYAAAAASUVORK5CYII="),url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAA3CAYAAADNNiA5AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAACJJREFUeNpi+P//fxgTAwPDBxDxD078RSX+YeEyDFMCIMAAI3INmXiwf2YAAAAASUVORK5CYII=");background-repeat: no-repeat, repeat-x;background-position: center center, top left;color: transparent;border: 1px solid black;border-radius: 2px;cursor: pointer;pointer-events: auto;}.ace_dark .ace_fold {}.ace_fold:hover{background-image:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABEAAAAJCAYAAADU6McMAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAJpJREFUeNpi/P//PwOlgAXGYGRklAVSokD8GmjwY1wasKljQpYACtpCFeADcHVQfQyMQAwzwAZI3wJKvCLkfKBaMSClBlR7BOQikCFGQEErIH0VqkabiGCAqwUadAzZJRxQr/0gwiXIal8zQQPnNVTgJ1TdawL0T5gBIP1MUJNhBv2HKoQHHjqNrA4WO4zY0glyNKLT2KIfIMAAQsdgGiXvgnYAAAAASUVORK5CYII="),url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAA3CAYAAADNNiA5AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAACBJREFUeNpi+P//fz4TAwPDZxDxD5X4i5fLMEwJgAADAEPVDbjNw87ZAAAAAElFTkSuQmCC");}.ace_tooltip {background-color: #FFF;background-image: -webkit-linear-gradient(top, transparent, rgba(0, 0, 0, 0.1));background-image: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.1));border: 1px solid gray;border-radius: 1px;box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);color: black;max-width: 100%;padding: 3px 4px;position: fixed;z-index: 999999;-moz-box-sizing: border-box;-webkit-box-sizing: border-box;box-sizing: border-box;cursor: default;white-space: pre;word-wrap: break-word;line-height: normal;font-style: normal;font-weight: normal;letter-spacing: normal;pointer-events: none;}.ace_folding-enabled > .ace_gutter-cell {padding-right: 13px;}.ace_fold-widget {-moz-box-sizing: border-box;-webkit-box-sizing: border-box;box-sizing: border-box;margin: 0 -12px 0 1px;display: none;width: 11px;vertical-align: top;background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAANElEQVR42mWKsQ0AMAzC8ixLlrzQjzmBiEjp0A6WwBCSPgKAXoLkqSot7nN3yMwR7pZ32NzpKkVoDBUxKAAAAABJRU5ErkJggg==");background-repeat: no-repeat;background-position: center;border-radius: 3px;border: 1px solid transparent;cursor: pointer;}.ace_folding-enabled .ace_fold-widget {display: inline-block;   }.ace_fold-widget.ace_end {background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAANElEQVR42m3HwQkAMAhD0YzsRchFKI7sAikeWkrxwScEB0nh5e7KTPWimZki4tYfVbX+MNl4pyZXejUO1QAAAABJRU5ErkJggg==");}.ace_fold-widget.ace_closed {background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAMAAAAGCAYAAAAG5SQMAAAAOUlEQVR42jXKwQkAMAgDwKwqKD4EwQ26sSOkVWjgIIHAzPiCgaqiqnJHZnKICBERHN194O5b9vbLuAVRL+l0YWnZAAAAAElFTkSuQmCCXA==");}.ace_fold-widget:hover {border: 1px solid rgba(0, 0, 0, 0.3);background-color: rgba(255, 255, 255, 0.2);box-shadow: 0 1px 1px rgba(255, 255, 255, 0.7);}.ace_fold-widget:active {border: 1px solid rgba(0, 0, 0, 0.4);background-color: rgba(0, 0, 0, 0.05);box-shadow: 0 1px 1px rgba(255, 255, 255, 0.8);}.ace_dark .ace_fold-widget {background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHklEQVQIW2P4//8/AzoGEQ7oGCaLLAhWiSwB146BAQCSTPYocqT0AAAAAElFTkSuQmCC");}.ace_dark .ace_fold-widget.ace_end {background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAH0lEQVQIW2P4//8/AxQ7wNjIAjDMgC4AxjCVKBirIAAF0kz2rlhxpAAAAABJRU5ErkJggg==");}.ace_dark .ace_fold-widget.ace_closed {background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAMAAAAFCAYAAACAcVaiAAAAHElEQVQIW2P4//+/AxAzgDADlOOAznHAKgPWAwARji8UIDTfQQAAAABJRU5ErkJggg==");}.ace_dark .ace_fold-widget:hover {box-shadow: 0 1px 1px rgba(255, 255, 255, 0.2);background-color: rgba(255, 255, 255, 0.1);}.ace_dark .ace_fold-widget:active {box-shadow: 0 1px 1px rgba(255, 255, 255, 0.2);}.ace_fold-widget.ace_invalid {background-color: #FFB4B4;border-color: #DE5555;}.ace_fade-fold-widgets .ace_fold-widget {-webkit-transition: opacity 0.4s ease 0.05s;transition: opacity 0.4s ease 0.05s;opacity: 0;}.ace_fade-fold-widgets:hover .ace_fold-widget {-webkit-transition: opacity 0.05s ease 0.05s;transition: opacity 0.05s ease 0.05s;opacity:1;}.ace_underline {text-decoration: underline;}.ace_bold {font-weight: bold;}.ace_nobold .ace_bold {font-weight: normal;}.ace_italic {font-style: italic;}.ace_error-marker {background-color: rgba(255, 0, 0,0.2);position: absolute;z-index: 9;}.ace_highlight-marker {background-color: rgba(255, 255, 0,0.2);position: absolute;z-index: 8;}.ace_br1 {border-top-left-radius    : 3px;}.ace_br2 {border-top-right-radius   : 3px;}.ace_br3 {border-top-left-radius    : 3px; border-top-right-radius:    3px;}.ace_br4 {border-bottom-right-radius: 3px;}.ace_br5 {border-top-left-radius    : 3px; border-bottom-right-radius: 3px;}.ace_br6 {border-top-right-radius   : 3px; border-bottom-right-radius: 3px;}.ace_br7 {border-top-left-radius    : 3px; border-top-right-radius:    3px; border-bottom-right-radius: 3px;}.ace_br8 {border-bottom-left-radius : 3px;}.ace_br9 {border-top-left-radius    : 3px; border-bottom-left-radius:  3px;}.ace_br10{border-top-right-radius   : 3px; border-bottom-left-radius:  3px;}.ace_br11{border-top-left-radius    : 3px; border-top-right-radius:    3px; border-bottom-left-radius:  3px;}.ace_br12{border-bottom-right-radius: 3px; border-bottom-left-radius:  3px;}.ace_br13{border-top-left-radius    : 3px; border-bottom-right-radius: 3px; border-bottom-left-radius:  3px;}.ace_br14{border-top-right-radius   : 3px; border-bottom-right-radius: 3px; border-bottom-left-radius:  3px;}.ace_br15{border-top-left-radius    : 3px; border-top-right-radius:    3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px;}.ace_text-input-ios {position: absolute !important;top: -100000px !important;left: -100000px !important;}
+/*# sourceURL=ace/css/ace_editor.css */</style><style id="ace-tm">.ace-tm .ace_gutter {background: #f0f0f0;color: #333;}.ace-tm .ace_print-margin {width: 1px;background: #e8e8e8;}.ace-tm .ace_fold {background-color: #6B72E6;}.ace-tm {background-color: #FFFFFF;color: black;}.ace-tm .ace_cursor {color: black;}.ace-tm .ace_invisible {color: rgb(191, 191, 191);}.ace-tm .ace_storage,.ace-tm .ace_keyword {color: blue;}.ace-tm .ace_constant {color: rgb(197, 6, 11);}.ace-tm .ace_constant.ace_buildin {color: rgb(88, 72, 246);}.ace-tm .ace_constant.ace_language {color: rgb(88, 92, 246);}.ace-tm .ace_constant.ace_library {color: rgb(6, 150, 14);}.ace-tm .ace_invalid {background-color: rgba(255, 0, 0, 0.1);color: red;}.ace-tm .ace_support.ace_function {color: rgb(60, 76, 114);}.ace-tm .ace_support.ace_constant {color: rgb(6, 150, 14);}.ace-tm .ace_support.ace_type,.ace-tm .ace_support.ace_class {color: rgb(109, 121, 222);}.ace-tm .ace_keyword.ace_operator {color: rgb(104, 118, 135);}.ace-tm .ace_string {color: rgb(3, 106, 7);}.ace-tm .ace_comment {color: rgb(76, 136, 107);}.ace-tm .ace_comment.ace_doc {color: rgb(0, 102, 255);}.ace-tm .ace_comment.ace_doc.ace_tag {color: rgb(128, 159, 191);}.ace-tm .ace_constant.ace_numeric {color: rgb(0, 0, 205);}.ace-tm .ace_variable {color: rgb(49, 132, 149);}.ace-tm .ace_xml-pe {color: rgb(104, 104, 91);}.ace-tm .ace_entity.ace_name.ace_function {color: #0000A2;}.ace-tm .ace_heading {color: rgb(12, 7, 255);}.ace-tm .ace_list {color:rgb(185, 6, 144);}.ace-tm .ace_meta.ace_tag {color:rgb(0, 22, 142);}.ace-tm .ace_string.ace_regex {color: rgb(255, 0, 0)}.ace-tm .ace_marker-layer .ace_selection {background: rgb(181, 213, 255);}.ace-tm.ace_multiselect .ace_selection.ace_start {box-shadow: 0 0 3px 0px white;}.ace-tm .ace_marker-layer .ace_step {background: rgb(252, 255, 0);}.ace-tm .ace_marker-layer .ace_stack {background: rgb(164, 229, 101);}.ace-tm .ace_marker-layer .ace_bracket {margin: -1px 0 0 -1px;border: 1px solid rgb(192, 192, 192);}.ace-tm .ace_marker-layer .ace_active-line {background: rgba(0, 0, 0, 0.07);}.ace-tm .ace_gutter-active-line {background-color : #dcdcdc;}.ace-tm .ace_marker-layer .ace_selected-word {background: rgb(250, 250, 255);border: 1px solid rgb(200, 200, 250);}.ace-tm .ace_indent-guide {background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAE0lEQVQImWP4////f4bLly//BwAmVgd1/w11/gAAAABJRU5ErkJggg==") right repeat-y;}
+/*# sourceURL=ace/css/ace-tm */</style><style>    .error_widget_wrapper {        background: inherit;        color: inherit;        border:none    }    .error_widget {        border-top: solid 2px;        border-bottom: solid 2px;        margin: 5px 0;        padding: 10px 40px;        white-space: pre-wrap;    }    .error_widget.ace_error, .error_widget_arrow.ace_error{        border-color: #ff5a5a    }    .error_widget.ace_warning, .error_widget_arrow.ace_warning{        border-color: #F1D817    }    .error_widget.ace_info, .error_widget_arrow.ace_info{        border-color: #5a5a5a    }    .error_widget.ace_ok, .error_widget_arrow.ace_ok{        border-color: #5aaa5a    }    .error_widget_arrow {        position: absolute;        border: solid 5px;        border-top-color: transparent!important;        border-right-color: transparent!important;        border-left-color: transparent!important;        top: -5px;    }</style><style type="text/css">.MJXp-script {font-size: .8em}
+.MJXp-right {-webkit-transform-origin: right; -moz-transform-origin: right; -ms-transform-origin: right; -o-transform-origin: right; transform-origin: right}
+.MJXp-bold {font-weight: bold}
+.MJXp-italic {font-style: italic}
+.MJXp-scr {font-family: MathJax_Script,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-frak {font-family: MathJax_Fraktur,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-sf {font-family: MathJax_SansSerif,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-cal {font-family: MathJax_Caligraphic,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-mono {font-family: MathJax_Typewriter,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-largeop {font-size: 150%}
+.MJXp-largeop.MJXp-int {vertical-align: -.2em}
+.MJXp-math {display: inline-block; line-height: 1.2; text-indent: 0; font-family: 'Times New Roman',Times,STIXGeneral,serif; white-space: nowrap; border-collapse: collapse}
+.MJXp-display {display: block; text-align: center; margin: 1em 0}
+.MJXp-math span {display: inline-block}
+.MJXp-box {display: block!important; text-align: center}
+.MJXp-box:after {content: " "}
+.MJXp-rule {display: block!important; margin-top: .1em}
+.MJXp-char {display: block!important}
+.MJXp-mo {margin: 0 .15em}
+.MJXp-mfrac {margin: 0 .125em; vertical-align: .25em}
+.MJXp-denom {display: inline-table!important; width: 100%}
+.MJXp-denom > * {display: table-row!important}
+.MJXp-surd {vertical-align: top}
+.MJXp-surd > * {display: block!important}
+.MJXp-script-box > *  {display: table!important; height: 50%}
+.MJXp-script-box > * > * {display: table-cell!important; vertical-align: top}
+.MJXp-script-box > *:last-child > * {vertical-align: bottom}
+.MJXp-script-box > * > * > * {display: block!important}
+.MJXp-mphantom {visibility: hidden}
+.MJXp-munderover {display: inline-table!important}
+.MJXp-over {display: inline-block!important; text-align: center}
+.MJXp-over > * {display: block!important}
+.MJXp-munderover > * {display: table-row!important}
+.MJXp-mtable {vertical-align: .25em; margin: 0 .125em}
+.MJXp-mtable > * {display: inline-table!important; vertical-align: middle}
+.MJXp-mtr {display: table-row!important}
+.MJXp-mtd {display: table-cell!important; text-align: center; padding: .5em 0 0 .5em}
+.MJXp-mtr > .MJXp-mtd:first-child {padding-left: 0}
+.MJXp-mtr:first-child > .MJXp-mtd {padding-top: 0}
+.MJXp-mlabeledtr {display: table-row!important}
+.MJXp-mlabeledtr > .MJXp-mtd:first-child {padding-left: 0}
+.MJXp-mlabeledtr:first-child > .MJXp-mtd {padding-top: 0}
+.MJXp-merror {background-color: #FFFF88; color: #CC0000; border: 1px solid #CC0000; padding: 1px 3px; font-style: normal; font-size: 90%}
+.MJXp-scale0 {-webkit-transform: scaleX(.0); -moz-transform: scaleX(.0); -ms-transform: scaleX(.0); -o-transform: scaleX(.0); transform: scaleX(.0)}
+.MJXp-scale1 {-webkit-transform: scaleX(.1); -moz-transform: scaleX(.1); -ms-transform: scaleX(.1); -o-transform: scaleX(.1); transform: scaleX(.1)}
+.MJXp-scale2 {-webkit-transform: scaleX(.2); -moz-transform: scaleX(.2); -ms-transform: scaleX(.2); -o-transform: scaleX(.2); transform: scaleX(.2)}
+.MJXp-scale3 {-webkit-transform: scaleX(.3); -moz-transform: scaleX(.3); -ms-transform: scaleX(.3); -o-transform: scaleX(.3); transform: scaleX(.3)}
+.MJXp-scale4 {-webkit-transform: scaleX(.4); -moz-transform: scaleX(.4); -ms-transform: scaleX(.4); -o-transform: scaleX(.4); transform: scaleX(.4)}
+.MJXp-scale5 {-webkit-transform: scaleX(.5); -moz-transform: scaleX(.5); -ms-transform: scaleX(.5); -o-transform: scaleX(.5); transform: scaleX(.5)}
+.MJXp-scale6 {-webkit-transform: scaleX(.6); -moz-transform: scaleX(.6); -ms-transform: scaleX(.6); -o-transform: scaleX(.6); transform: scaleX(.6)}
+.MJXp-scale7 {-webkit-transform: scaleX(.7); -moz-transform: scaleX(.7); -ms-transform: scaleX(.7); -o-transform: scaleX(.7); transform: scaleX(.7)}
+.MJXp-scale8 {-webkit-transform: scaleX(.8); -moz-transform: scaleX(.8); -ms-transform: scaleX(.8); -o-transform: scaleX(.8); transform: scaleX(.8)}
+.MJXp-scale9 {-webkit-transform: scaleX(.9); -moz-transform: scaleX(.9); -ms-transform: scaleX(.9); -o-transform: scaleX(.9); transform: scaleX(.9)}
+.MathJax_PHTML .noError {vertical-align: ; font-size: 90%; text-align: left; color: black; padding: 1px 3px; border: 1px solid}
+</style><style type="text/css">.MathJax_Display {text-align: center; margin: 1em 0em; position: relative; display: block!important; text-indent: 0; max-width: none; max-height: none; min-width: 0; min-height: 0; width: 100%}
+.MathJax .merror {background-color: #FFFF88; color: #CC0000; border: 1px solid #CC0000; padding: 1px 3px; font-style: normal; font-size: 90%}
+.MathJax .MJX-monospace {font-family: monospace}
+.MathJax .MJX-sans-serif {font-family: sans-serif}
+#MathJax_Tooltip {background-color: InfoBackground; color: InfoText; border: 1px solid black; box-shadow: 2px 2px 5px #AAAAAA; -webkit-box-shadow: 2px 2px 5px #AAAAAA; -moz-box-shadow: 2px 2px 5px #AAAAAA; -khtml-box-shadow: 2px 2px 5px #AAAAAA; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true'); padding: 3px 4px; z-index: 401; position: absolute; left: 0; top: 0; width: auto; height: auto; display: none}
+.MathJax {display: inline; font-style: normal; font-weight: normal; line-height: normal; font-size: 100%; font-size-adjust: none; text-indent: 0; text-align: left; text-transform: none; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; direction: ltr; max-width: none; max-height: none; min-width: 0; min-height: 0; border: 0; padding: 0; margin: 0}
+.MathJax:focus, body :focus .MathJax {display: inline-table}
+.MathJax.MathJax_FullWidth {text-align: center; display: table-cell!important; width: 10000em!important}
+.MathJax img, .MathJax nobr, .MathJax a {border: 0; padding: 0; margin: 0; max-width: none; max-height: none; min-width: 0; min-height: 0; vertical-align: 0; line-height: normal; text-decoration: none}
+img.MathJax_strut {border: 0!important; padding: 0!important; margin: 0!important; vertical-align: 0!important}
+.MathJax span {display: inline; position: static; border: 0; padding: 0; margin: 0; vertical-align: 0; line-height: normal; text-decoration: none}
+.MathJax nobr {white-space: nowrap!important}
+.MathJax img {display: inline!important; float: none!important}
+.MathJax * {transition: none; -webkit-transition: none; -moz-transition: none; -ms-transition: none; -o-transition: none}
+.MathJax_Processing {visibility: hidden; position: fixed; width: 0; height: 0; overflow: hidden}
+.MathJax_Processed {display: none!important}
+.MathJax_ExBox {display: block!important; overflow: hidden; width: 1px; height: 60ex; min-height: 0; max-height: none}
+.MathJax .MathJax_EmBox {display: block!important; overflow: hidden; width: 1px; height: 60em; min-height: 0; max-height: none}
+.MathJax_LineBox {display: table!important}
+.MathJax_LineBox span {display: table-cell!important; width: 10000em!important; min-width: 0; max-width: none; padding: 0; border: 0; margin: 0}
+.MathJax .MathJax_HitBox {cursor: text; background: white; opacity: 0; filter: alpha(opacity=0)}
+.MathJax .MathJax_HitBox * {filter: none; opacity: 1; background: transparent}
+#MathJax_Tooltip * {filter: none; opacity: 1; background: transparent}
+@font-face {font-family: MathJax_Main; src: url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_Main-Regular.woff?V=2.7.1') format('woff'), url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_Main-Regular.otf?V=2.7.1') format('opentype')}
+@font-face {font-family: MathJax_Main; src: url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_Main-Bold.woff?V=2.7.1') format('woff'), url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_Main-Bold.otf?V=2.7.1') format('opentype'); font-weight: bold}
+@font-face {font-family: MathJax_Main; src: url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_Main-Italic.woff?V=2.7.1') format('woff'), url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_Main-Italic.otf?V=2.7.1') format('opentype'); font-style: italic}
+@font-face {font-family: MathJax_Math; src: url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_Math-Italic.woff?V=2.7.1') format('woff'), url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_Math-Italic.otf?V=2.7.1') format('opentype'); font-style: italic}
+@font-face {font-family: MathJax_Caligraphic; src: url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_Caligraphic-Regular.woff?V=2.7.1') format('woff'), url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_Caligraphic-Regular.otf?V=2.7.1') format('opentype')}
+@font-face {font-family: MathJax_Size1; src: url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_Size1-Regular.woff?V=2.7.1') format('woff'), url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_Size1-Regular.otf?V=2.7.1') format('opentype')}
+@font-face {font-family: MathJax_Size2; src: url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_Size2-Regular.woff?V=2.7.1') format('woff'), url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_Size2-Regular.otf?V=2.7.1') format('opentype')}
+@font-face {font-family: MathJax_Size3; src: url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_Size3-Regular.woff?V=2.7.1') format('woff'), url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_Size3-Regular.otf?V=2.7.1') format('opentype')}
+@font-face {font-family: MathJax_Size4; src: url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_Size4-Regular.woff?V=2.7.1') format('woff'), url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_Size4-Regular.otf?V=2.7.1') format('opentype')}
+.MathJax .noError {vertical-align: ; font-size: 90%; text-align: left; color: black; padding: 1px 3px; border: 1px solid}
+</style></head>
+  <body id="page-top" data-spy="scroll" data-target=".navbar-fixed-top" class="ember-application"><div style="visibility: hidden; overflow: hidden; position: absolute; top: 0px; height: 1px; width: auto; padding: 0px; border: 0px none; margin: 0px; text-align: left; text-indent: 0px; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal;"><div id="MathJax_Hidden"><span class="MathJax MathJax_Processing" id="MathJax-Element-1-Frame" tabindex="0"></span><br><span class="MathJax MathJax_Processing" id="MathJax-Element-2-Frame" tabindex="0"></span><br></div></div><div id="MathJax_Message" style="">Processing math: 100%</div>
+    <div class="row">
+      
+    </div>
+    <script src="assets/vendor.js"></script>
+    <script src="assets/ksi.js"></script>
+
+    
+  
+
+
+<div id="ember508" class="ember-view"><!-- Wraper already inserted as view div. -->
+<div id="header">
+    <div id="ember529" class="ember-view"><!-- header content -->
+<div class="visible-print" style="text-align: center">
+    <h1 style="font-size: 30px">Korespondenční seminář z&nbsp;informatiky</h1>
+    <p>Ročník 2020/2021</p>
+</div>
+<nav class="navbar navbar-trans navbar-static-top" role="navigation" style="z-index:150;" id="navbar">
+  <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-main">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+<a id="ember536" href="/" rel="home" class="pull-left header-link ember-view">                  <img src="img/karlik_color.png" class="inline" style="padding-left: 5px; max-width:53px;">
+                  <div class="inline" id="ksi-text-short" style="padding-left: 5px">KSI</div>
+                  <div class="inline" id="ksi-text-long">Korespondenční seminář z&nbsp;informatiky</div>
+</a>        </div>
+        <div class="navbar-collapse collapse" id="navbar-collapse-main">
+            <ul class="nav navbar-nav navbar-left" style="margin-left:20px">
+              <li>
+                  <a id="ember559" href="/ulohy" class="header-button ember-view">Úlohy</a>
+              </li>
+              <li>
+                  <a id="ember587" href="/vysledky" class="header-button ember-view">Výsledky</a>
+              </li>
+              <li>
+                  <a id="ember606" href="/o-ksi?view=about" class="header-button ember-view">O KSI</a>
+              </li>
+              <li>
+                  <a id="ember623" href="/novinky" class="header-button ember-view">Novinky</a>
+              </li>
+              <li>
+                  <a id="ember640" href="/forum" class="header-button ember-view">Diskuse</a>
+              </li>
+              <li class="hidden-sm dropdown-menu-main">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">2020/2021<span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                        <li><a href="#" data-ember-action="914">2020/2021</a></li>
+                        <li><a href="#" data-ember-action="915">2019/2020</a></li>
+                        <li><a href="#" data-ember-action="916">2018/2019</a></li>
+                        <li><a href="#" data-ember-action="917">2017/2018</a></li>
+                        <li><a href="#" data-ember-action="918">2016/2017</a></li>
+                        <li><a href="#" data-ember-action="919">2015/2016</a></li>
+                </ul>
+            </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                  <a href="javascript:void(0)" class="btn btn-header dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                    <div style="text-align:center;">
+                      <!--<div style="display:inline">
+                          <img src="{{session.current_user.profile_pic}}" style="margin:0width:53px;"/>
+                      </div>--><!-- foto nefunguje opravim ked pridem -->
+                      <div id="header-text" style=" margin-left:10px; display:inline">
+                        Kristýna Petrlíková
+                      </div>
+                      <div style=" margin-left:10px; display:inline">
+                        <span class="glyphicon glyphicon-menu-down" aria-hidden="true" style="color:#fff"></span>
+                      </div>
+                    </div>
+                  </a>
+                  <ul class="dropdown-menu dropdown-menu-main" aria-labelledby="dropdownMenu"> <!-- TODO odkazy -->
+                    <li><a id="ember659" href="/profil" class="ember-view">Profil</a></li>
+                    <li><a id="ember682" href="/nastaveni" class="ember-view">Nastavení</a></li>
+                    <li class="divider"></li>
+                    <li><a class="header-button cursor-pointer" data-ember-action="714">Odhlásit se</a></li> <!-- TODO odhlasit -->
+                  </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+</div>
+<!----></div>
+
+<div id="content">
+        <section class="container content-section">
+        <div class="row task-title" style="margin-left: 20px">
+            <h2 id="name" style="color: black">Procházení stromů</h2>
+        </div>
+        <!-- TODO: center name and image -->
+        <div class="row" style="padding-left:5px; margin-left: 20px">
+          <h5 class="inline">Autor: </h5>
+          <a id="ember1003" href="/profil/698" class="noLinkDecoration ember-view"><img id="org-photo" class="inline" style="border-radius: 2px; width: 30px" src="https://rest.ksi.fi.muni.cz/images/profile/698">
+          <h5 id="org-name" class="inline" style="color: #39393a;text-decoration: none;"> Anna Řechtáčková</h5></a>
+<!---->          <p class="task-points inline">Max. 1 bod</p>
+        </div>
+        <div class="row" style="padding-left:5px; margin-left: 20px">
+          <h5 class="inline">Termín odevzdání: </h5>
+            <p class="task-points inline">21. březen 2021 23:59</p>
+        </div>
+
+        <div class="row hidden-print container-fluid" style="margin-top: 20px">
+            <nav class="navbar navbar-uloha" role="navigation">
+                <div class="container-fluid">
+                    <div class="navbar-header-menu" id="bs-task-navbar">
+                        <ul class="nav navbar-nav">
+                            <li id="ember1018" class="ember-view active"><a href="">Zadání</a></li>
+                            <li id="ember1019" class="ember-view"><a href="">Statistika</a></li>
+                            <li id="ember1020" class="ember-view"><a href="">Diskuze</a></li>
+                            <li id="ember1021" class="ember-view"><a href="">Hodnocení</a></li>
+                            <li id="ember1022" class="ember-view"><a href="">Řešení</a></li>
+                        </ul>
+
+<!---->                    </div><!-- /.navbar -->
+                </div><!-- /.container-fluid -->
+            </nav>
+        </div>
+        <section class="autojustify">
+            <div style="margin-bottom:30px">
+  <div style="margin:20px">
+    <div id="task-assignment">
+        <h3 class="visible-print">Zadání</h3>
+        <p>Stromy nalézají v informatice široké uplatnění. Uveďme pro motivaci několik problémů, které lze vyřešit pomocí vhodného použití stromů:</p>
+<ul>
+<li>Rychlé hledání extrémů (minim a maxim) v měnících se datech.</li>
+<li>Hledání nejkratší cesty v bludišti.</li>
+<li>Efektivní výpočet mediánu.</li>
+</ul>
+<h3 id="co-je-to-vlastně-průchod-stromu-a-proč-ho-chceme">Co je to vlastně průchod stromu a proč ho chceme?</h3>
+<p>Představme si, že v našem stromu máme uloženou adresářovou strukturu souborového systému počítače. Jednou z operací, která by se nám nad takovým stromem mohla hodit, je výpis všech prvků, tedy názvů všech adresářů a souborů. Pokud uvážíme, že každý soubor a adresář máme uložený jako vrchol stromu (angl. <em>node</em>) a tento vrchol má v sobě uložený seznam následníků (podadresářů a souborů), operace výpisu všech souborů najednou už nezní až tak jednoduše. Je totiž neskutečně důležité <em>jak strom projdeme</em>.</p>
+<h3 id="základní-techniky-průchodu-stromů">Základní techniky průchodu stromů</h3>
+<p>Existují 2 základní techniky pro průchod stromu:</p>
+<ol type="1">
+<li>průchod do šířky a</li>
+<li>průchod do hloubky.</li>
+</ol>
+<p>Obě techniky mají společné to, že</p>
+<ul>
+<li><strong>systematicky prochází všechny vrcholy stromu</strong> a</li>
+<li>začínají v jednom konkrétním vrcholu,</li>
+</ul>
+<p><strong>liší se však v tom, jaký systém (jaké pořadí vrcholů) pro průchod zvolí</strong>.</p>
+<h4 id="prohledávání-do-šířky-bfs">Prohledávání do šířky (BFS)</h4>
+<p>Prohledávání do šířky (<em>Breadth First Search</em>) prohledává strom <em>po celých patrech</em>.</p>
+<figure>
+<img src="https://rest.ksi.fi.muni.cz/taskContent/344/zadani/bfs.gif" alt=""><figcaption>Animace prohledávání do šířky [<a href="https://commons.wikimedia.org/wiki/File:Breadth-First-Search-Algorithm.gif">zdroj</a>]</figcaption>
+</figure>
+<p>BFS si lze představit jako lití vědra plného vody do konkrétního uzlu stromu. Pořadí, v jakém se voda vlévá do jednotlivých uzlů, přesně odpovídá pořadí, ve kterém prochází tyto uzly prohledávání do šířky.</p>
+<p>Uvažme strom uložený v paměti pomocí samostatných vrcholů. Každý vrchol (<code>Node</code>) je třída obsahující data vrcholu (<code>data</code>) a seznam následníků (<code>children</code>).</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">class</span> Node(<span class="bu">object</span>):</span>
+<span id="cb1-2"><a href="#cb1-2"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, data<span class="op">=</span><span class="va">None</span>):</span>
+<span id="cb1-3"><a href="#cb1-3"></a>        <span class="va">self</span>.data <span class="op">=</span> data</span>
+<span id="cb1-4"><a href="#cb1-4"></a>        <span class="va">self</span>.children <span class="op">=</span> []</span>
+<span id="cb1-5"><a href="#cb1-5"></a>        </span>
+<span id="cb1-6"><a href="#cb1-6"></a>    <span class="co"># Pripoji potomka</span></span>
+<span id="cb1-7"><a href="#cb1-7"></a>    <span class="kw">def</span> add_child(<span class="va">self</span>, child):</span>
+<span id="cb1-8"><a href="#cb1-8"></a>        <span class="va">self</span>.children.append(child)</span></code></pre></div>
+<p>K implementaci BFS nad takovým stromem využijeme <em>frontu</em> (angl. <em>queue</em>) vrcholů a to následovně:</p>
+<ul>
+<li>Na začátku algoritmu bude ve frontě jeden jediný vrchol – počáteční vrchol definovaný uživatelem.</li>
+<li>Program bude postupně vybírat vrcholy z fronty (dokud nebude fronta prázdná) a to následovně:</li>
+</ul>
+<div style="margin-left: 20px;">
+<div style="padding-left:20px">
+
+
+
+<hr>
+<p>current ← queue.dequeue()<br>
+</p>
+<p>current.visit() // zde je algoritmus notifikovan o nalezeni noveho vrcholu a muze provest nejakou akci<br>
+</p>
+<p><strong>for</strong> child in current.children:<br>
+</p>
+<p> queue.enqueue(child)<br>
+</p>
+<p>current.finish() // zde je algoritmus notifikovan o ukonceni prohledavani vrcholu<br>
+</p>
+<hr>
+</div>
+</div>
+<p>Na pořadí procházení vrcholů na jednom patře stromu nezáleží, avšak jakmile se rozhodneme projít jedno patro jedné větve, musíme toto patro projít celé před započetím procházení ekvivalnentího patra sousední větve. Nelze projít např. polovinu vrcholů levé větve, pak jeden vrchol pravé větve a pak zbytek vrcholů levé větve.</p>
+<p>Zkuste se zamyslet nad tím, jak byste algoritmus popsaný výše implementovali.</p>
+<div class="panel panel-ksi panel-group">
+<div class="panel-heading panel-heading-ksi">
+<h5 class="panel-title">
+<a data-toggle="collapse" href="#collapse1">Implementace v Pythonu</a>
+</h5>
+</div>
+<div id="collapse1" class="panel-collapse collapse">
+<div class="panel-body">
+<div class="sourceCode" id="cb2"><pre class="sourceCode numberSource python numberLines"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a><span class="im">from</span> collections <span class="im">import</span> deque</span>
+<span id="cb2-2"><a href="#cb2-2"></a></span>
+<span id="cb2-3"><a href="#cb2-3"></a><span class="kw">def</span> bfs(start):</span>
+<span id="cb2-4"><a href="#cb2-4"></a>    q <span class="op">=</span> deque()</span>
+<span id="cb2-5"><a href="#cb2-5"></a>    q.append(start) <span class="co"># v Pythonu append odpovida enqueue z pseudokodu</span></span>
+<span id="cb2-6"><a href="#cb2-6"></a>    <span class="cf">while</span> <span class="bu">len</span>(q) <span class="op">&gt;</span> <span class="dv">0</span>:</span>
+<span id="cb2-7"><a href="#cb2-7"></a>        current <span class="op">=</span> q.popleft() <span class="co"># v Pythonu popleft odpovida dequeue z pseudokodu</span></span>
+<span id="cb2-8"><a href="#cb2-8"></a>        <span class="bu">print</span>(<span class="st">"Navstevuji prvek "</span><span class="op">+</span><span class="bu">str</span>(current.data))</span>
+<span id="cb2-9"><a href="#cb2-9"></a>        <span class="cf">for</span> child <span class="kw">in</span> current.children:</span>
+<span id="cb2-10"><a href="#cb2-10"></a>                q.append(child)</span>
+<span id="cb2-11"><a href="#cb2-11"></a>        <span class="bu">print</span>(<span class="st">"Navsteva prvku "</span><span class="op">+</span><span class="bu">str</span>(current.data)<span class="op">+</span><span class="st">" ukoncena"</span>)</span></code></pre></div>
+</div>
+</div>
+</div>
+<h4 id="prohledávání-do-hloubky-dfs">Prohledávání do hloubky (DFS)</h4>
+<p>Prohledávání do hloubky (<em>Depth First Search</em>) se vyznačuje tím, že nepostupuje <em>po patrech</em>, ale <strong>po větvích</strong>. Tedy, DFS nejdříve úplně prohledá jednu větev (až k listu – do hloubky) a až pak začne prohledávat větev další. Na tu aplikuje stejný postup.</p>
+<p>Prohledávání do hloubky lze opět názorně ilustrovat na animaci:</p>
+<figure>
+<img src="https://rest.ksi.fi.muni.cz/taskContent/344/zadani/dfs.gif" alt=""><figcaption>Animace prohledávání do hloubky [<a href="https://commons.wikimedia.org/wiki/File:Depth-First-Search.gif">zdroj</a>]</figcaption>
+</figure>
+<p>K implementaci prohledávání do hloubky využijeme opět strom reprezentovaný pomocí vrcholů a seznamů následníků a datovou strukturu <em>zásobník</em>. V Pythonu použijeme k implementaci zásobníku jednoduchý seznam.</p>
+<p>Zkusme nejprve upravit předchozí kód tak, že místo fronty použijeme zásobník (seznam).</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode numberSource python numberLines"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a><span class="kw">def</span> dfs(start):</span>
+<span id="cb3-2"><a href="#cb3-2"></a>    s <span class="op">=</span> []</span>
+<span id="cb3-3"><a href="#cb3-3"></a>    s.append(start)</span>
+<span id="cb3-4"><a href="#cb3-4"></a>    <span class="cf">while</span> <span class="bu">len</span>(s) <span class="op">&gt;</span> <span class="dv">0</span>:</span>
+<span id="cb3-5"><a href="#cb3-5"></a>        current <span class="op">=</span> s.pop()</span>
+<span id="cb3-6"><a href="#cb3-6"></a>        <span class="bu">print</span>(<span class="st">"Navstevuji prvek "</span><span class="op">+</span><span class="bu">str</span>(current.data))</span>
+<span id="cb3-7"><a href="#cb3-7"></a>        <span class="cf">for</span> child <span class="kw">in</span> current.children:</span>
+<span id="cb3-8"><a href="#cb3-8"></a>            s.append(child)</span>
+<span id="cb3-9"><a href="#cb3-9"></a>        <span class="bu">print</span>(<span class="st">"Navsteva prvku "</span><span class="op">+</span><span class="bu">str</span>(current.data)<span class="op">+</span><span class="st">" ukoncena"</span>)</span></code></pre></div>
+<p>Tento kód ovšem <strong>není</strong> kódem DFS, <strong>nestačí</strong> jenom vyměnit datovou strukturu. Podívejme se ale, jak se toto prohledávání chová.</p>
+<p>Tento kód na grafu z animace produkuje následující výstup:</p>
+<pre><code>Navstevuji prvek 1
+Navsteva prvku 1 ukoncena
+Navstevuji prvek 9
+Navsteva prvku 9 ukoncena
+Navstevuji prvek 10
+Navsteva prvku 10 ukoncena
+...</code></pre>
+<p>My bychom ale chtěli, aby výstup našeho algoritmu vypadal takto:</p>
+<pre><code>Navstevuji prvek 1
+Navstevuji prvek 2
+Navstevuji prvek 3
+Navstevuji prvek 4
+Navsteva prvku 4 ukoncena
+Navsteva prvku 3 ukoncena
+Navsteva prvku 2 ukoncena
+Navstevuji prvek 5
+...
+Navsteva prvku 1 ukoncena</code></pre>
+<p>To zejména proto, abychom v zásobníku měli v každém momentě cestu z aktuálně prohledávaného vrcholu do kořene, která se hodí v mnoha aplikacích.</p>
+<p>Zkuste si rozmyslet, co je v aktuálním algoritmu špatně a jak algoritmus upravit, aby dělal to, co chceme.</p>
+<div class="panel panel-ksi panel-group">
+<div class="panel-heading panel-heading-ksi">
+<h5 class="panel-title">
+<a data-toggle="collapse" href="#collapse2">Řešení</a>
+</h5>
+</div>
+<div id="collapse2" class="panel-collapse collapse">
+<div class="panel-body">
+<p>V našem algoritmu bude nutné odstranit kód, který po příchodu do vrcholu vloží všechny dětí vrcholu do zásobníku. Vkládání vrcholů do zásobníku totiž musí probíhat postupně.</p>
+<p>Jakmile dostaneme vrchol <span class="math inline"><span class="MathJax_Preview" style="color: inherit;"><span class="MJXp-math" id="MJXp-Span-1"><span class="MJXp-mi MJXp-italic" id="MJXp-Span-2">v</span></span></span><script type="math/tex" id="MathJax-Element-1">v</script></span> ke zpracování, nepřidáme do zásobníku všechny jeho syny, ale jen prvního syna. Tohoto syna pak zpracujeme. Až budou syn a všechny jeho děti (až k listům) zpracovány, začneme prohledávat dalšího syna vrcholu <span class="math inline"><span class="MathJax_Preview" style="color: inherit;"><span class="MJXp-math" id="MJXp-Span-3"><span class="MJXp-mi MJXp-italic" id="MJXp-Span-4">v</span></span></span><script type="math/tex" id="MathJax-Element-2">v</script></span>. A tak dále.</p>
+<p>Pro implementaci popsaného algoritmu si potřebujeme v zásobníku pamatovat nejen vrchol, ale i index syna, který má být zpracován jako další. V zásobníku si tedy budeme držet dvojici <code>(node, next_index)</code>.</p>
+<p>Implementace v Pythonu vypadá následovně:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode numberSource python numberLines"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a><span class="kw">def</span> dfs(start):</span>
+<span id="cb6-2"><a href="#cb6-2"></a>    s <span class="op">=</span> []</span>
+<span id="cb6-3"><a href="#cb6-3"></a>    s.append((start, <span class="dv">0</span>))</span>
+<span id="cb6-4"><a href="#cb6-4"></a></span>
+<span id="cb6-5"><a href="#cb6-5"></a>    <span class="cf">while</span> <span class="bu">len</span>(s) <span class="op">&gt;</span> <span class="dv">0</span>:</span>
+<span id="cb6-6"><a href="#cb6-6"></a>        (current, index) <span class="op">=</span> s.pop()</span>
+<span id="cb6-7"><a href="#cb6-7"></a></span>
+<span id="cb6-8"><a href="#cb6-8"></a>        <span class="cf">if</span> index <span class="op">==</span> <span class="dv">0</span>:</span>
+<span id="cb6-9"><a href="#cb6-9"></a>            <span class="co"># Vrchol navstevujeme poprve</span></span>
+<span id="cb6-10"><a href="#cb6-10"></a>            <span class="bu">print</span>(<span class="st">"Navstevuji prvek "</span><span class="op">+</span><span class="bu">str</span>(current.data))</span>
+<span id="cb6-11"><a href="#cb6-11"></a></span>
+<span id="cb6-12"><a href="#cb6-12"></a>        <span class="cf">if</span> index <span class="op">&lt;</span> <span class="bu">len</span>(current.children):</span>
+<span id="cb6-13"><a href="#cb6-13"></a>            <span class="co"># Navstevujeme dalsi dite</span></span>
+<span id="cb6-14"><a href="#cb6-14"></a>            s.append((current, index<span class="op">+</span><span class="dv">1</span>)) <span class="co"># Naplanujeme navrat na aktualni</span></span>
+<span id="cb6-15"><a href="#cb6-15"></a>                                         <span class="co"># vrchol a projiti dalsiho syna.</span></span>
+<span id="cb6-16"><a href="#cb6-16"></a>            s.append((current.children[index], <span class="dv">0</span>))</span>
+<span id="cb6-17"><a href="#cb6-17"></a>        <span class="cf">else</span>:</span>
+<span id="cb6-18"><a href="#cb6-18"></a>            <span class="co"># Uz jsme vsechny deti navstivili</span></span>
+<span id="cb6-19"><a href="#cb6-19"></a>            <span class="bu">print</span>(<span class="st">"Navsteva prvku "</span><span class="op">+</span><span class="bu">str</span>(current.data)<span class="op">+</span><span class="st">" ukoncena"</span>)</span></code></pre></div>
+</div>
+</div>
+</div>
+<p>Tvrzení, že DFS je vlastně jen BFS s jinou datovou strukturou, bývá častou chybou informatických webů, učitelů a přednášejících. Jak jste si sami vyzkoušeli, <strong>toto tvrzení není pravdivé</strong>, do zásobníku je totiž nutné ukládat více informací, než do fronty. Považujeme za nanejvýš důležité, abyste si tuto skutečnost uvědomovali.</p>
+<p>Na tomto místě bychom rádi upozornili, že výše prezentované algoritmy jsou funkční pouze na stromech, nikoliv na grafech. Můžete si rozmyslet, jak algoritmy upravit, aby fungovaly na obecných grafech (s cykly), pokud víte, co to graf je.</p>
+<p>Bystrý čtenář si jistě všiml, že prohledávání do hloubky lze implementovat jednodušeji za pomocí techniky zvané <em>rekurze</em>.</p>
+<div class="panel panel-ksi panel-group">
+<div class="panel-heading panel-heading-ksi">
+<h5 class="panel-title">
+<a data-toggle="collapse" href="#collapse3">Alternativní řešení využívající rekurzi</a>
+</h5>
+</div>
+<div id="collapse3" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Pro ty zvědavé tedy uvádíme i rekurzivní řešení:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1"></a><span class="kw">def</span> dfs_recursive(current, stack<span class="op">=</span><span class="va">None</span>):</span>
+<span id="cb7-2"><a href="#cb7-2"></a>    <span class="cf">if</span> stack <span class="kw">is</span> <span class="va">None</span>:</span>
+<span id="cb7-3"><a href="#cb7-3"></a>        stack <span class="op">=</span> []</span>
+<span id="cb7-4"><a href="#cb7-4"></a></span>
+<span id="cb7-5"><a href="#cb7-5"></a>    <span class="bu">print</span>(<span class="st">"Navstevuji prvek "</span><span class="op">+</span><span class="bu">str</span>(current.data))</span>
+<span id="cb7-6"><a href="#cb7-6"></a>    stack.append(current)</span>
+<span id="cb7-7"><a href="#cb7-7"></a>    <span class="cf">for</span> single_child <span class="kw">in</span> current.children:</span>
+<span id="cb7-8"><a href="#cb7-8"></a>        dfs_recursive(single_child, stack)</span>
+<span id="cb7-9"><a href="#cb7-9"></a>    stack.pop()</span>
+<span id="cb7-10"><a href="#cb7-10"></a>    <span class="bu">print</span>(<span class="st">"Navsteva prvku "</span><span class="op">+</span><span class="bu">str</span>(current.data)<span class="op">+</span><span class="st">" ukoncena"</span>)</span></code></pre></div>
+<p>Rekurzivní řešení je v tomto případě dost možná srozumitelnější a lépe pochopitelné, nicméně přináší s sebou svou vlastní sadu problémů. Nejvýraznější z nich je ten, že Python má defaultně nastavený limit maximálně 1000 rekurzivních zanoření, což výrazně omezuje maximální hloubku stromů, které lze takto prohledat. I v jiných programovacích jazycích rekurze dokáže omezit výkon programu, a proto je mimořádně žádoucí být obeznámený i s iterativním řešením uvedeným v předchozím bloku.</p>
+</div>
+</div>
+</div>
+<p>Nyní se můžete s vervou pustit do řešení kvízu. Pokud se vám nepodaří odpovědět správně napoprvé, zkuste se opravdu zamyslet nad popsanými algoritmy, zkuste si je sami napsat, prozkoumejte, jak prohledávají různě tvarované stromy – dřív než začnete tipovat. Slibuji, že prohledávání do hloubky i do šířky v životě opravdu využijete (a při programování dvojnásob!) a tipováním se o nich určitě moc nenaučíte.</p>
+    </div>
+    <hr>
+<!---->        <div style="margin-left:0px" class="panel panel-module-correct">
+  <div class="panel-heading panel-heading-module-correct">
+      Stromový kvíz (BFS)
+
+<!---->
+        <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+<!---->
+      <div style="float: right; margin-top: -5px;">
+        <button class="btn btn-task btn-primary hidden-print" data-ember-action="1187">Zkusit odevzdat znovu</button>
+      </div>
+  </div>
+
+<!----></div>
+
+        <div style="margin-left:0px" class="panel panel-module-correct">
+  <div class="panel-heading panel-heading-module-correct">
+      Stromový kvíz (DFS)
+
+<!---->
+        <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+<!---->
+      <div style="float: right; margin-top: -5px;">
+        <button class="btn btn-task btn-primary hidden-print" data-ember-action="1190">Zkusit odevzdat znovu</button>
+      </div>
+  </div>
+
+<!----></div>
+
+        <div style="margin-left:0px" class="panel panel-module-correct">
+  <div class="panel-heading panel-heading-module-correct">
+      Stromový kvíz (BFS <em>i</em> DFS)
+
+<!---->
+        <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+<!---->
+      <div style="float: right; margin-top: -5px;">
+        <button class="btn btn-task btn-primary hidden-print" data-ember-action="1193">Zkusit odevzdat znovu</button>
+      </div>
+  </div>
+
+<!----></div>
+
+  </div>
+
+    <hr>
+
+    <div class="hidden-print">
+      <div class="panel panel-module-blank" style="margin-left:0px">
+        <div class="panel-heading panel-heading-module-blank">
+          Autorské řešení
+        </div>
+        <div class="panel-body" id="task-module-body">
+          <div style="margin:20px">
+    <h3 class="visible-print">Řešení</h3>
+        <div id="task-solution">
+            <h3 id="bfs-znamená">BFS znamená?</h3>
+<ol type="1">
+<li>✗ Bread First Search</li>
+<li>✗ BreakFast Search</li>
+<li>✓ Breadth First Search</li>
+</ol>
+<h3 id="v-jaké-z-níže-uvedených-konfigurací-stromu-je-paměťová-složitost-bfs-absolutně-největší">V jaké z níže uvedených konfigurací stromu je paměťová složitost BFS absolutně největší?</h3>
+<ol type="1">
+<li>✗ Když strom obsahuje jednu jedinou dlouhou (hlubokou) cestu.</li>
+<li>✓ Když strom obsahuje všechny vrcholy připojené ke kořeni.</li>
+<li>✗ Když má každý vrchol stromu právě 2 následníky.</li>
+</ol>
+<p>V případě (1) je ve frontě vždy jen jeden prvek, v případě (2) musí v určitém okamžiku fronta obsahovat všechny vrcholy, až na kořen, protože BFS prohledává strom “po patrech”, v případě (3) obshahuje fronta v každé iteraci počet prvků patra. Z těchto úvah vychází nejhorší paměťová složitosti (největší nároky na paměť) na případ (2).</p>
+<h3 id="jak-může-vypadat-obsah-fronty-prohledávání-do-šířky-stromu-d-při-průchodu-vrcholu-6">Jak může vypadat obsah fronty prohledávání do šířky stromu <em>d</em> při průchodu vrcholu 6?</h3>
+<figure>
+<img src="https://rest.ksi.fi.muni.cz/taskContent/344/zadani/bfs.png" alt=""><figcaption>Strom <em>d</em> [<a href="https://commons.wikimedia.org/wiki/File:Breadth-First-Search-Algorithm.gif">zdroj</a>]</figcaption>
+</figure>
+<p>V této otázce jde o to, že při započetí zpracování patra <span class="math inline"><span class="MathJax_Preview" style="color: inherit;"><span class="MJXp-math" id="MJXp-Span-5"><span class="MJXp-mi MJXp-italic" id="MJXp-Span-6">k</span></span></span><span class="MathJax MathJax_Processing" id="MathJax-Element-3-Frame" tabindex="0"></span><script type="math/tex" id="MathJax-Element-3">k</script></span> musí být zpracovány vrcholy patra <span class="math inline"><span class="MathJax_Preview" style="color: inherit;"><span class="MJXp-math" id="MJXp-Span-7"><span class="MJXp-mi MJXp-italic" id="MJXp-Span-8">k</span><span class="MJXp-mo" id="MJXp-Span-9" style="margin-left: 0.267em; margin-right: 0.267em;">−</span><span class="MJXp-mn" id="MJXp-Span-10">1</span></span></span><span class="MathJax MathJax_Processing" id="MathJax-Element-4-Frame" tabindex="0"></span><script type="math/tex" id="MathJax-Element-4">k-1</script></span> (uvažujme hloubku rostoucí od kořene).</p>
+<p>Uvědomme si dále, že na pořadí procházení vrcholů v jednom patře nezáleží. A to s jednou výjimkou: nelze projít např. polovinu vrcholů levé větve, pak jeden vrchol pravé větve a pak zbytek vrcholů levé větvě. Viz možnost (4).</p>
+<ol type="1">
+<li>✗ [6, 9, 7, 8], protože nemohu zpracovat vrchol <code>9</code> před vrcholem <code>8</code>.</li>
+<li>✓ [6, 7, 8, 9]</li>
+<li>✗ [6, 7, 8], protože levý podgraf nemohu dokončit před uzavřením vrcholu <code>6</code>.</li>
+<li>✗ [6, 5, 7, 8], protože mezi vrcholy <code>6</code> a <code>7</code> nemohu vměstnat vrchol <code>5</code>.</li>
+<li>✓ [6, 7, 5, 8], protože na pořaadí procházení podstromů v jednom patře nezáleží.</li>
+</ol>
+<h3 id="dfs-znamená">DFS znamená?</h3>
+<ol type="1">
+<li>✗ Die Fast Search</li>
+<li>✗ DreadFul Search</li>
+<li>✓ Depth First Search</li>
+</ol>
+<h3 id="jaká-je-asymptotická-časová-složitost-prohledávání-do-hloubky">Jaká je asymptotická časová složitost prohledávání do hloubky?</h3>
+<ol type="1">
+<li>✗ <span class="math inline"><span class="MathJax_Preview" style="color: inherit;"><span class="MJXp-math" id="MJXp-Span-11"><span class="MJXp-mrow" id="MJXp-Span-12"><span class="MJXp-mi MJXp-cal" id="MJXp-Span-13">O</span></span><span class="MJXp-mo" id="MJXp-Span-14" style="margin-left: 0em; margin-right: 0em;">(</span><span class="MJXp-mrow" id="MJXp-Span-15"><span class="MJXp-mo" id="MJXp-Span-16" style="margin-left: 0.167em; margin-right: 0.167em;">|</span></span><span class="MJXp-mi MJXp-italic" id="MJXp-Span-17">E</span><span class="MJXp-mrow" id="MJXp-Span-18"><span class="MJXp-mo" id="MJXp-Span-19" style="margin-left: 0.167em; margin-right: 0.167em;">|</span></span><span class="MJXp-mo" id="MJXp-Span-20" style="margin-left: 0em; margin-right: 0em;">)</span></span></span><span class="MathJax MathJax_Processing" id="MathJax-Element-5-Frame" tabindex="0"></span><script type="math/tex" id="MathJax-Element-5">\mathcal{O}(|E|)</script></span>, protože algoritmus projde každou hranu právě jednou.</li>
+<li>✗ <span class="math inline"><span class="MathJax_Preview" style="color: inherit;"><span class="MJXp-math" id="MJXp-Span-21"><span class="MJXp-mrow" id="MJXp-Span-22"><span class="MJXp-mi MJXp-cal" id="MJXp-Span-23">O</span></span><span class="MJXp-mo" id="MJXp-Span-24" style="margin-left: 0em; margin-right: 0em;">(</span><span class="MJXp-mrow" id="MJXp-Span-25"><span class="MJXp-mo" id="MJXp-Span-26" style="margin-left: 0.167em; margin-right: 0.167em;">|</span></span><span class="MJXp-mi MJXp-italic" id="MJXp-Span-27">V</span><span class="MJXp-mrow" id="MJXp-Span-28"><span class="MJXp-mo" id="MJXp-Span-29" style="margin-left: 0.167em; margin-right: 0.167em;">|</span></span><span class="MJXp-mo" id="MJXp-Span-30" style="margin-left: 0em; margin-right: 0em;">)</span></span></span><span class="MathJax MathJax_Processing" id="MathJax-Element-6-Frame" tabindex="0"></span><script type="math/tex" id="MathJax-Element-6">\mathcal{O}(|V|)</script></span>, protože algoritmus projde každý vrchol právě jednou.</li>
+<li>✗ <span class="math inline"><span class="MathJax_Preview" style="color: inherit;"><span class="MJXp-math" id="MJXp-Span-31"><span class="MJXp-mrow" id="MJXp-Span-32"><span class="MJXp-mi MJXp-cal" id="MJXp-Span-33">O</span></span><span class="MJXp-mo" id="MJXp-Span-34" style="margin-left: 0em; margin-right: 0em;">(</span><span class="MJXp-mrow" id="MJXp-Span-35"><span class="MJXp-mo" id="MJXp-Span-36" style="margin-left: 0.167em; margin-right: 0.167em;">|</span></span><span class="MJXp-mi MJXp-italic" id="MJXp-Span-37">V</span><span class="MJXp-mrow" id="MJXp-Span-38"><span class="MJXp-mo" id="MJXp-Span-39" style="margin-left: 0.167em; margin-right: 0.167em;">|</span></span><span class="MJXp-mo" id="MJXp-Span-40" style="margin-left: 0.267em; margin-right: 0.267em;">+</span><span class="MJXp-mrow" id="MJXp-Span-41"><span class="MJXp-mo" id="MJXp-Span-42" style="margin-left: 0.167em; margin-right: 0.167em;">|</span></span><span class="MJXp-mi MJXp-italic" id="MJXp-Span-43">E</span><span class="MJXp-mrow" id="MJXp-Span-44"><span class="MJXp-mo" id="MJXp-Span-45" style="margin-left: 0.167em; margin-right: 0.167em;">|</span></span><span class="MJXp-mo" id="MJXp-Span-46" style="margin-left: 0em; margin-right: 0em;">)</span></span></span><span class="MathJax MathJax_Processing" id="MathJax-Element-7-Frame" tabindex="0"></span><script type="math/tex" id="MathJax-Element-7">\mathcal{O}(|V| + |E|)</script></span>, protože algorimtus projde každou hranu a každý vrchol právě jednou.</li>
+<li>✓ Všechny tři předchozí odpovědi jsou správně, protože na stromech <span class="math inline"><span class="MathJax_Preview" style="color: inherit;"><span class="MJXp-math" id="MJXp-Span-47"><span class="MJXp-mrow" id="MJXp-Span-48"><span class="MJXp-mi MJXp-cal" id="MJXp-Span-49">O</span></span><span class="MJXp-mo" id="MJXp-Span-50" style="margin-left: 0em; margin-right: 0em;">(</span><span class="MJXp-mrow" id="MJXp-Span-51"><span class="MJXp-mo" id="MJXp-Span-52" style="margin-left: 0.167em; margin-right: 0.167em;">|</span></span><span class="MJXp-mi MJXp-italic" id="MJXp-Span-53">V</span><span class="MJXp-mrow" id="MJXp-Span-54"><span class="MJXp-mo" id="MJXp-Span-55" style="margin-left: 0.167em; margin-right: 0.167em;">|</span></span><span class="MJXp-mo" id="MJXp-Span-56" style="margin-left: 0.267em; margin-right: 0.267em;">+</span><span class="MJXp-mrow" id="MJXp-Span-57"><span class="MJXp-mo" id="MJXp-Span-58" style="margin-left: 0.167em; margin-right: 0.167em;">|</span></span><span class="MJXp-mi MJXp-italic" id="MJXp-Span-59">E</span><span class="MJXp-mrow" id="MJXp-Span-60"><span class="MJXp-mo" id="MJXp-Span-61" style="margin-left: 0.167em; margin-right: 0.167em;">|</span></span><span class="MJXp-mo" id="MJXp-Span-62" style="margin-left: 0em; margin-right: 0em;">)</span><span class="MJXp-mo" id="MJXp-Span-63" style="margin-left: 0.333em; margin-right: 0.333em;">=</span><span class="MJXp-mrow" id="MJXp-Span-64"><span class="MJXp-mi MJXp-cal" id="MJXp-Span-65">O</span></span><span class="MJXp-mo" id="MJXp-Span-66" style="margin-left: 0em; margin-right: 0em;">(</span><span class="MJXp-mrow" id="MJXp-Span-67"><span class="MJXp-mo" id="MJXp-Span-68" style="margin-left: 0.167em; margin-right: 0.167em;">|</span></span><span class="MJXp-mi MJXp-italic" id="MJXp-Span-69">V</span><span class="MJXp-mrow" id="MJXp-Span-70"><span class="MJXp-mo" id="MJXp-Span-71" style="margin-left: 0.167em; margin-right: 0.167em;">|</span></span><span class="MJXp-mo" id="MJXp-Span-72" style="margin-left: 0em; margin-right: 0em;">)</span><span class="MJXp-mo" id="MJXp-Span-73" style="margin-left: 0.333em; margin-right: 0.333em;">=</span><span class="MJXp-mrow" id="MJXp-Span-74"><span class="MJXp-mi MJXp-cal" id="MJXp-Span-75">O</span></span><span class="MJXp-mo" id="MJXp-Span-76" style="margin-left: 0em; margin-right: 0em;">(</span><span class="MJXp-mrow" id="MJXp-Span-77"><span class="MJXp-mo" id="MJXp-Span-78" style="margin-left: 0.167em; margin-right: 0.167em;">|</span></span><span class="MJXp-mi MJXp-italic" id="MJXp-Span-79">E</span><span class="MJXp-mrow" id="MJXp-Span-80"><span class="MJXp-mo" id="MJXp-Span-81" style="margin-left: 0.167em; margin-right: 0.167em;">|</span></span><span class="MJXp-mo" id="MJXp-Span-82" style="margin-left: 0em; margin-right: 0em;">)</span></span></span><span class="MathJax MathJax_Processing" id="MathJax-Element-8-Frame" tabindex="0"></span><script type="math/tex" id="MathJax-Element-8">\mathcal{O}(|V| + |E|) = \mathcal{O}(|V|) = \mathcal{O}(|E|)</script></span>.</li>
+</ol>
+<p>Na stromech opravdu platí, že <span class="math inline"><span class="MathJax_Preview" style="color: inherit;"><span class="MJXp-math" id="MJXp-Span-83"><span class="MJXp-mrow" id="MJXp-Span-84"><span class="MJXp-mi MJXp-cal" id="MJXp-Span-85">O</span></span><span class="MJXp-mo" id="MJXp-Span-86" style="margin-left: 0em; margin-right: 0em;">(</span><span class="MJXp-mrow" id="MJXp-Span-87"><span class="MJXp-mo" id="MJXp-Span-88" style="margin-left: 0.167em; margin-right: 0.167em;">|</span></span><span class="MJXp-mi MJXp-italic" id="MJXp-Span-89">V</span><span class="MJXp-mrow" id="MJXp-Span-90"><span class="MJXp-mo" id="MJXp-Span-91" style="margin-left: 0.167em; margin-right: 0.167em;">|</span></span><span class="MJXp-mo" id="MJXp-Span-92" style="margin-left: 0.267em; margin-right: 0.267em;">+</span><span class="MJXp-mrow" id="MJXp-Span-93"><span class="MJXp-mo" id="MJXp-Span-94" style="margin-left: 0.167em; margin-right: 0.167em;">|</span></span><span class="MJXp-mi MJXp-italic" id="MJXp-Span-95">E</span><span class="MJXp-mrow" id="MJXp-Span-96"><span class="MJXp-mo" id="MJXp-Span-97" style="margin-left: 0.167em; margin-right: 0.167em;">|</span></span><span class="MJXp-mo" id="MJXp-Span-98" style="margin-left: 0em; margin-right: 0em;">)</span><span class="MJXp-mo" id="MJXp-Span-99" style="margin-left: 0.333em; margin-right: 0.333em;">=</span><span class="MJXp-mrow" id="MJXp-Span-100"><span class="MJXp-mi MJXp-cal" id="MJXp-Span-101">O</span></span><span class="MJXp-mo" id="MJXp-Span-102" style="margin-left: 0em; margin-right: 0em;">(</span><span class="MJXp-mrow" id="MJXp-Span-103"><span class="MJXp-mo" id="MJXp-Span-104" style="margin-left: 0.167em; margin-right: 0.167em;">|</span></span><span class="MJXp-mi MJXp-italic" id="MJXp-Span-105">V</span><span class="MJXp-mrow" id="MJXp-Span-106"><span class="MJXp-mo" id="MJXp-Span-107" style="margin-left: 0.167em; margin-right: 0.167em;">|</span></span><span class="MJXp-mo" id="MJXp-Span-108" style="margin-left: 0em; margin-right: 0em;">)</span><span class="MJXp-mo" id="MJXp-Span-109" style="margin-left: 0.333em; margin-right: 0.333em;">=</span><span class="MJXp-mrow" id="MJXp-Span-110"><span class="MJXp-mi MJXp-cal" id="MJXp-Span-111">O</span></span><span class="MJXp-mo" id="MJXp-Span-112" style="margin-left: 0em; margin-right: 0em;">(</span><span class="MJXp-mrow" id="MJXp-Span-113"><span class="MJXp-mo" id="MJXp-Span-114" style="margin-left: 0.167em; margin-right: 0.167em;">|</span></span><span class="MJXp-mi MJXp-italic" id="MJXp-Span-115">E</span><span class="MJXp-mrow" id="MJXp-Span-116"><span class="MJXp-mo" id="MJXp-Span-117" style="margin-left: 0.167em; margin-right: 0.167em;">|</span></span><span class="MJXp-mo" id="MJXp-Span-118" style="margin-left: 0em; margin-right: 0em;">)</span></span></span><span class="MathJax MathJax_Processing" id="MathJax-Element-9-Frame" tabindex="0"></span><script type="math/tex" id="MathJax-Element-9">\mathcal{O}(|V| + |E|) = \mathcal{O}(|V|) = \mathcal{O}(|E|)</script></span>, protože s každým novým vrcholem přidáme právě jednu hranu (až na triviální případ, kdy přidáváme vrchol do prázdného stromu).</p>
+<h3 id="jaký-je-největší-počet-prvků-který-může-obsahovat-zásobník-dfs">Jaký je největší počet prvků, který může obsahovat zásobník DFS?</h3>
+<ol type="1">
+<li>✗ <span class="math inline"><span class="MathJax_Preview" style="color: inherit;"><span class="MJXp-math" id="MJXp-Span-119"><span class="MJXp-mrow" id="MJXp-Span-120"><span class="MJXp-mo" id="MJXp-Span-121" style="margin-left: 0.167em; margin-right: 0.167em;">|</span></span><span class="MJXp-mi MJXp-italic" id="MJXp-Span-122">E</span><span class="MJXp-mrow" id="MJXp-Span-123"><span class="MJXp-mo" id="MJXp-Span-124" style="margin-left: 0.167em; margin-right: 0.167em;">|</span></span></span></span><span class="MathJax MathJax_Processing" id="MathJax-Element-10-Frame" tabindex="0"></span><script type="math/tex" id="MathJax-Element-10">|E|</script></span>, protože v zásobníku se mohou nacházet všechny hrany.</li>
+<li>✓ <span class="math inline"><span class="MathJax_Preview" style="color: inherit;"><span class="MJXp-math" id="MJXp-Span-125"><span class="MJXp-mrow" id="MJXp-Span-126"><span class="MJXp-mo" id="MJXp-Span-127" style="margin-left: 0.167em; margin-right: 0.167em;">|</span></span><span class="MJXp-mi MJXp-italic" id="MJXp-Span-128">V</span><span class="MJXp-mrow" id="MJXp-Span-129"><span class="MJXp-mo" id="MJXp-Span-130" style="margin-left: 0.167em; margin-right: 0.167em;">|</span></span></span></span><span class="MathJax MathJax_Processing" id="MathJax-Element-11-Frame" tabindex="0"></span><script type="math/tex" id="MathJax-Element-11">|V|</script></span>, protože v zásobníku se mohou nacházet všechny vrcholy.</li>
+<li>✗ <span class="math inline"><span class="MathJax_Preview" style="color: inherit;"><span class="MJXp-math" id="MJXp-Span-131"><span class="MJXp-mrow" id="MJXp-Span-132"><span class="MJXp-mo" id="MJXp-Span-133" style="margin-left: 0.167em; margin-right: 0.167em;">|</span></span><span class="MJXp-mi MJXp-italic" id="MJXp-Span-134">V</span><span class="MJXp-mrow" id="MJXp-Span-135"><span class="MJXp-mo" id="MJXp-Span-136" style="margin-left: 0.167em; margin-right: 0.167em;">|</span></span><span class="MJXp-mo" id="MJXp-Span-137" style="margin-left: 0.267em; margin-right: 0.267em;">+</span><span class="MJXp-mrow" id="MJXp-Span-138"><span class="MJXp-mo" id="MJXp-Span-139" style="margin-left: 0.167em; margin-right: 0.167em;">|</span></span><span class="MJXp-mi MJXp-italic" id="MJXp-Span-140">E</span><span class="MJXp-mrow" id="MJXp-Span-141"><span class="MJXp-mo" id="MJXp-Span-142" style="margin-left: 0.167em; margin-right: 0.167em;">|</span></span></span></span><span class="MathJax MathJax_Processing" id="MathJax-Element-12-Frame" tabindex="0"></span><script type="math/tex" id="MathJax-Element-12">|V| + |E|</script></span>, protože strom zabírá <span class="math inline"><span class="MathJax_Preview" style="color: inherit;"><span class="MJXp-math" id="MJXp-Span-143"><span class="MJXp-mrow" id="MJXp-Span-144"><span class="MJXp-mo" id="MJXp-Span-145" style="margin-left: 0.167em; margin-right: 0.167em;">|</span></span><span class="MJXp-mi MJXp-italic" id="MJXp-Span-146">V</span><span class="MJXp-mrow" id="MJXp-Span-147"><span class="MJXp-mo" id="MJXp-Span-148" style="margin-left: 0.167em; margin-right: 0.167em;">|</span></span><span class="MJXp-mo" id="MJXp-Span-149" style="margin-left: 0.267em; margin-right: 0.267em;">+</span><span class="MJXp-mrow" id="MJXp-Span-150"><span class="MJXp-mo" id="MJXp-Span-151" style="margin-left: 0.167em; margin-right: 0.167em;">|</span></span><span class="MJXp-mi MJXp-italic" id="MJXp-Span-152">E</span><span class="MJXp-mrow" id="MJXp-Span-153"><span class="MJXp-mo" id="MJXp-Span-154" style="margin-left: 0.167em; margin-right: 0.167em;">|</span></span></span></span><span class="MathJax MathJax_Processing" id="MathJax-Element-13-Frame" tabindex="0"></span><script type="math/tex" id="MathJax-Element-13">|V| + |E|</script></span> paměti.</li>
+</ol>
+<p>…protože zásobník obsahuje pouze vrcholy.</p>
+<p>Úplně stejná situace nastává u algoritmu BFS.</p>
+<p>Pokud bychom chtěli hovořit o asymptotické paměťové složitosti, musíme si opět uvědomit, že na stromech <span class="math inline"><span class="MathJax_Preview" style="color: inherit;"><span class="MJXp-math" id="MJXp-Span-155"><span class="MJXp-mrow" id="MJXp-Span-156"><span class="MJXp-mi MJXp-cal" id="MJXp-Span-157">O</span></span><span class="MJXp-mo" id="MJXp-Span-158" style="margin-left: 0em; margin-right: 0em;">(</span><span class="MJXp-mrow" id="MJXp-Span-159"><span class="MJXp-mo" id="MJXp-Span-160" style="margin-left: 0.167em; margin-right: 0.167em;">|</span></span><span class="MJXp-mi MJXp-italic" id="MJXp-Span-161">V</span><span class="MJXp-mrow" id="MJXp-Span-162"><span class="MJXp-mo" id="MJXp-Span-163" style="margin-left: 0.167em; margin-right: 0.167em;">|</span></span><span class="MJXp-mo" id="MJXp-Span-164" style="margin-left: 0.267em; margin-right: 0.267em;">+</span><span class="MJXp-mrow" id="MJXp-Span-165"><span class="MJXp-mo" id="MJXp-Span-166" style="margin-left: 0.167em; margin-right: 0.167em;">|</span></span><span class="MJXp-mi MJXp-italic" id="MJXp-Span-167">E</span><span class="MJXp-mrow" id="MJXp-Span-168"><span class="MJXp-mo" id="MJXp-Span-169" style="margin-left: 0.167em; margin-right: 0.167em;">|</span></span><span class="MJXp-mo" id="MJXp-Span-170" style="margin-left: 0em; margin-right: 0em;">)</span><span class="MJXp-mo" id="MJXp-Span-171" style="margin-left: 0.333em; margin-right: 0.333em;">=</span><span class="MJXp-mrow" id="MJXp-Span-172"><span class="MJXp-mi MJXp-cal" id="MJXp-Span-173">O</span></span><span class="MJXp-mo" id="MJXp-Span-174" style="margin-left: 0em; margin-right: 0em;">(</span><span class="MJXp-mrow" id="MJXp-Span-175"><span class="MJXp-mo" id="MJXp-Span-176" style="margin-left: 0.167em; margin-right: 0.167em;">|</span></span><span class="MJXp-mi MJXp-italic" id="MJXp-Span-177">V</span><span class="MJXp-mrow" id="MJXp-Span-178"><span class="MJXp-mo" id="MJXp-Span-179" style="margin-left: 0.167em; margin-right: 0.167em;">|</span></span><span class="MJXp-mo" id="MJXp-Span-180" style="margin-left: 0em; margin-right: 0em;">)</span><span class="MJXp-mo" id="MJXp-Span-181" style="margin-left: 0.333em; margin-right: 0.333em;">=</span><span class="MJXp-mrow" id="MJXp-Span-182"><span class="MJXp-mi MJXp-cal" id="MJXp-Span-183">O</span></span><span class="MJXp-mo" id="MJXp-Span-184" style="margin-left: 0em; margin-right: 0em;">(</span><span class="MJXp-mrow" id="MJXp-Span-185"><span class="MJXp-mo" id="MJXp-Span-186" style="margin-left: 0.167em; margin-right: 0.167em;">|</span></span><span class="MJXp-mi MJXp-italic" id="MJXp-Span-187">E</span><span class="MJXp-mrow" id="MJXp-Span-188"><span class="MJXp-mo" id="MJXp-Span-189" style="margin-left: 0.167em; margin-right: 0.167em;">|</span></span><span class="MJXp-mo" id="MJXp-Span-190" style="margin-left: 0em; margin-right: 0em;">)</span></span></span><span class="MathJax MathJax_Processing" id="MathJax-Element-14-Frame" tabindex="0"></span><script type="math/tex" id="MathJax-Element-14">\mathcal{O}(|V| + |E|) = \mathcal{O}(|V|) = \mathcal{O}(|E|)</script></span>. Na stromech tedy moc nemá cenu hovořit o asymptotické paměťové složitosti.</p>
+<p>Bavili bychom-li se o grafech, asymptotická paměťová složitost obou prohledávání je <span class="math inline"><span class="MathJax_Preview" style="color: inherit;"><span class="MJXp-math" id="MJXp-Span-191"><span class="MJXp-mrow" id="MJXp-Span-192"><span class="MJXp-mi MJXp-cal" id="MJXp-Span-193">O</span></span><span class="MJXp-mo" id="MJXp-Span-194" style="margin-left: 0em; margin-right: 0em;">(</span><span class="MJXp-mrow" id="MJXp-Span-195"><span class="MJXp-mo" id="MJXp-Span-196" style="margin-left: 0.167em; margin-right: 0.167em;">|</span></span><span class="MJXp-mi MJXp-italic" id="MJXp-Span-197">V</span><span class="MJXp-mrow" id="MJXp-Span-198"><span class="MJXp-mo" id="MJXp-Span-199" style="margin-left: 0.167em; margin-right: 0.167em;">|</span></span><span class="MJXp-mo" id="MJXp-Span-200" style="margin-left: 0em; margin-right: 0em;">)</span></span></span><span class="MathJax MathJax_Processing" id="MathJax-Element-15-Frame" tabindex="0"></span><script type="math/tex" id="MathJax-Element-15">\mathcal{O}(|V|)</script></span>.</p>
+<h3 id="když-chci-z-prohledávání-do-šířky-udělat-prohledávání-do-hloubky-stačí-vyměnit-datovou-strukturu">Když chci z prohledávání do šířky udělat prohledávání do hloubky, stačí vyměnit datovou strukturu?</h3>
+<ol type="1">
+<li>✗ Ano.</li>
+<li>✓ Ne.</li>
+</ol>
+<h3 id="co-by-se-rozbilo-kdybys-implementoval-dfs-na-stromech-jako-bfs-pouze-s-tím-rozdílem-že-bys-místo-fronty-využil-zásobník">Co by se rozbilo, kdybys implementoval DFS na stromech jako BFS pouze s tím rozdílem, že bys místo fronty využil zásobník?</h3>
+<ol type="1">
+<li>✓ V zásobníku by nebyla cesta od kořene k aktuálnímu vrcholu, ale i něco navíc.<br>
+Viz průvodní text úlohy.</li>
+<li>✗ Paměťová složitost algoritmu.<br>
+V zásobníku nikdy nemůže být více, než <span class="math inline"><span class="MathJax_Preview" style="color: inherit;"><span class="MJXp-math" id="MJXp-Span-201"><span class="MJXp-mrow" id="MJXp-Span-202"><span class="MJXp-mo" id="MJXp-Span-203" style="margin-left: 0.167em; margin-right: 0.167em;">|</span></span><span class="MJXp-mi MJXp-italic" id="MJXp-Span-204">V</span><span class="MJXp-mrow" id="MJXp-Span-205"><span class="MJXp-mo" id="MJXp-Span-206" style="margin-left: 0.167em; margin-right: 0.167em;">|</span></span></span></span><span class="MathJax MathJax_Processing" id="MathJax-Element-16-Frame" tabindex="0"></span><script type="math/tex" id="MathJax-Element-16">|V|</script></span> prvků, protože nemůžeme navštívit jeden vrchol vícekrát. To plyne z toho, že strom neobsahuje cykly. Sazmořjmě, pokud bychom uvážili DFS na obecných grafech (které mohou obsahovat cykly), paměťová složitosti algoritmu by se pokazila.</li>
+<li>✗ Časová složitost algoritmu.<br>
+Algoritmus nemůže navštívit jeden vrchol vícekrát, viz předchozí odůvodnění. Algoritmus také nemůže projít jednu hranu vícekrát. To proto, že k jednou projisté hraně se algoritmus už nevrací.</li>
+<li>✓ Prohledávání vrcholu by bylo uzavřeno před prohledáním jeho podstromu.<br>
+Viz průvodní text.</li>
+<li>✗ Algoritmus by mohl navštěvovat už navštívené vrcholy.<br>
+Na stromech ne, protože k jednomu vrcholu se lze dostat jen jednou cestou.</li>
+</ol>
+
+        </div>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    <div id="ember1202" class="ember-view"><br><hr><br>
+<div class="feedbackWrapper hidden-print">
+    <div style="margin-left:0px" class="panel panel-module-blank">
+    <div class="panel-heading panel-heading-module-blank">
+        Feedback
+        <div style="float: right; margin-top: -5px;">
+            <button class="btn btn-task btn-primary hidden-print" data-ember-action="1203">Skrýt feedback</button>
+        </div>
+    </div>
+
+    <div class="panel-body" id="task-module-body">
+        <h3 style="text-align: center;">Co na to říkáš?</h3>
+        <div id="task-feedback" style="width: 470px; margin: auto;">
+                <div class="single_feedback_category">
+                    <label for="explained">Jak dobře ti přišla úloha vysvětlená?</label>
+                        <div class="rating-stars text-center">
+                            <input id="task-feedback-answer-explained" type="hidden" class="task-feedback-stars-field ember-view ember-text-field">
+                            <ul id="stars">
+                                <li class="star" title="Špatná" data-value="1">
+                                    <i class="fa fa-star fa-fw"></i>
+                                </li>
+                                <li class="star" title="Nic moc" data-value="2">
+                                    <i class="fa fa-star fa-fw"></i>
+                                </li>
+                                <li class="star" title="OK" data-value="3">
+                                    <i class="fa fa-star fa-fw"></i>
+                                </li>
+                                <li class="star" title="Dobrá" data-value="4">
+                                    <i class="fa fa-star fa-fw"></i>
+                                </li>
+                                <li class="star" title="Super" data-value="5">
+                                    <i class="fa fa-star fa-fw"></i>
+                                </li>
+                            </ul>
+                        </div>
+<!----><!---->                    <br>
+                </div>
+                <div class="single_feedback_category">
+                    <label for="interesting">Jak moc ti přijde úloha zajímavá?</label>
+                        <div class="rating-stars text-center">
+                            <input id="task-feedback-answer-interesting" type="hidden" class="task-feedback-stars-field ember-view ember-text-field">
+                            <ul id="stars">
+                                <li class="star" title="Špatná" data-value="1">
+                                    <i class="fa fa-star fa-fw"></i>
+                                </li>
+                                <li class="star" title="Nic moc" data-value="2">
+                                    <i class="fa fa-star fa-fw"></i>
+                                </li>
+                                <li class="star" title="OK" data-value="3">
+                                    <i class="fa fa-star fa-fw"></i>
+                                </li>
+                                <li class="star" title="Dobrá" data-value="4">
+                                    <i class="fa fa-star fa-fw"></i>
+                                </li>
+                                <li class="star" title="Super" data-value="5">
+                                    <i class="fa fa-star fa-fw"></i>
+                                </li>
+                            </ul>
+                        </div>
+<!----><!---->                    <br>
+                </div>
+                <div class="single_feedback_category">
+                    <label for="difficult">Jak moc ti přijde úloha těžká?</label>
+<!---->                        <div id="task-feedback-difficult">
+                                <div class="lineLegend">
+                                    <span> Triviální </span>
+                                    <span style="float: right;"> Supertěžká </span>
+                                </div>
+                            <div id="ember1231" class="ember-view ui-slider singular fill"><div class="slider slider-horizontal" id=""><div class="slider-track"><div class="slider-track-low" style="left: 0px; width: 0%;"></div><div class="slider-selection" style="left: 0%; width: 50%;"></div><div class="slider-track-high" style="right: 0px; width: 50%;"></div></div><div class="tooltip tooltip-main top hide" role="presentation" style="left: 50%;"><div class="tooltip-arrow"></div><div class="tooltip-inner">3</div></div><div class="tooltip tooltip-min top hide" role="presentation"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div><div class="tooltip tooltip-max hide top" role="presentation" style=""><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div><div class="slider-handle min-slider-handle round" role="slider" aria-valuemin="1" aria-valuemax="5" style="left: 50%;" aria-valuenow="3" tabindex="0"></div><div class="slider-handle max-slider-handle round hide" role="slider" aria-valuemin="1" aria-valuemax="5" style="left: 0%;" aria-valuenow="1" tabindex="0"></div></div><input type="text" class="slider-value" id="slider-value-ember1231" style="display: none;" data-value="3" value="3"></div>
+                            <input id="task-feedback-answer-difficult" type="hidden" class="ember-view ember-text-field">
+                        </div>
+<!---->                    <br>
+                </div>
+                <div class="single_feedback_category">
+                    <label for="comment">Chceš nám vzkázat něco, co nám pomůže příště úlohu připravit lépe? (nepovinné)</label>
+<!----><!---->                        <textarea id="task-feedback-answer-comment" placeholder="Cokoliv, co tě napadá." rows="4" cols="50" class="form-control ember-view ember-text-area"><!----></textarea>
+                    <br>
+                </div>
+            <div class="form-group">
+                <button class="btn btn-primary" data-ember-action="1204">Odeslat feedback</button>
+            </div>
+
+<!---->        </div>
+    </div>
+    </div>
+</div></div>
+    <div class="text-center hidden-print">
+<a id="ember1205" href="/ulohy" class="btn btn-primary btn-lg ember-view">        <h3>Pokračovat dále</h3>
+</a>    </div>
+</div>
+
+        </section>
+    </section>
+
+</div>
+
+<div id="footer">
+    <!-- footer content -->
+<footer class="text-center">
+    <div class="footer-above hidden-print">
+        <div class="container">
+            <div class="row">
+                <div class="footer-col col-md-12">
+                      <div style="text-align: center; color: #fff; margin-top:-10px"><h3>Odkazy</h3></div>
+                      <div class="row row-centered">
+                        <a href="mailto:ksi@fi.muni.cz" title="ksi@fi.muni.cz" class="footer-logo inline-footer" id="mail-logo"></a>
+                        <a href="https://www.facebook.com/ksi.fi.muni" title="Facebook" class="footer-logo inline-footer" id="facebook-logo"></a>
+                        <a href="https://www.fi.muni.cz/" title="Fakulta Informatiky MU" class="footer-logo inline-footer" id="fi-logo"></a>
+                        <a href="https://www.muni.cz/" title="Masarykova Univerzita Brno" class="footer-logo inline-footer" id="mu-logo"></a>
+                        <a href="https://kscuk.fi.muni.cz/" title="K-SCUK" class="footer-logo inline-footer" id="kscuk-logo"></a>
+                        <a href="https://intersob.math.muni.cz" title="Soutěž InterSoB" class="footer-logo inline-footer" id="sob-logo"></a>
+                        <a href="https://interlos.fi.muni.cz" title="INTERnetová LOgická Soutěž" class="footer-logo inline-footer" id="los-logo"></a>
+                        <a href="https://zverinec.fi.muni.cz" title="Spolek přátel severské zvěře" class="footer-logo inline-footer" id="zverinec-logo"></a>
+                        <a href="http://brkos.math.muni.cz" title="BRněnský KOrespondenční Seminář" class="footer-logo inline-footer" id="brkos-logo"></a>
+                        <a href="http://ibis.sci.muni.cz/" title="Interaktivní BIologický Seminář" class="footer-logo inline-footer" id="ibis-logo"></a>
+                        <a href="https://ksp.mff.cuni.cz" title="Korespondenční seminář z programování" class="footer-logo inline-footer" id="ksp-logo"></a>
+                        <a href="https://www.youtube.com/channel/UCH0K2_tAhkJNlvfRo5NsEIg" title="YouTube" class="footer-logo inline-footer" id="youtube-logo"></a>
+                        <a href="https://github.com/fi-ksi" title="KSI @ GitHub" class="footer-logo inline-footer" id="github-logo"></a>
+                      </div>
+                      <div style="opacity: 0.001; height: 1px;">
+                        <img src="/img/logos/email-hover.svg" width="1" height="1">
+                        <img src="/img/logos/facebook-hover.svg" width="1" height="1">
+                        <img src="/img/logos/youtube-hover.svg" width="1" height="1">
+                        <img src="/img/logos/fi-hover.svg" width="1" height="1">
+                        <img src="/img/logos/mu-hover.svg" width="1" height="1">
+                        <img src="/img/logos/kscuk-hover.svg" width="1" height="1">
+                        <img src="/img/logos/zverinec-hover.svg" width="1" height="1">
+                        <img src="/img/logos/ibis-hover.svg" width="1" height="1">
+                        <img src="/img/logos/brkos-hover.svg" width="1" height="1">
+                        <img src="/img/logos/intersob-hover.svg" width="1" height="1">
+                        <img src="/img/logos/los-hover.svg" width="1" height="1">
+                        <img src="/img/logos/ksp-hover.svg" width="1" height="1">
+                        <img src="/img/logos/github-hover.svg" width="1" height="1">
+                      </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer-below">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    Obsah tohoto webu je poskytován pod licencí
+                    <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC&nbsp;BY-NC&nbsp;v4.0</a>.
+                    Copyright ©&nbsp;<a href="/img/ee/tuxs.gif" target="_blank">KSI</a>&nbsp;2015–2020.
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+</div>
+
+<button id="btn-feedback" type="button" class="btn btn-default hidden-xs hidden-print" data-toggle="modal" data-target="#feedback-modal">
+  <p id="vazba-text">Zpětná vazba</p>
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="feedback-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" aria-label="Close" data-ember-action="723"><span aria-hidden="true">×</span></button>
+        <h4 class="modal-title"><span class="glyphicon glyphicon-comment" aria-hidden="true"></span> Pošli nám odezvu na KSI web</h4>
+      </div>
+<form id="ember732" novalidate="novalidate" class="ember-view">            <div class="modal-body">
+              <div role="alert" class="alert alert-info " id="" style="">
+<!---->    <div style="text-align:center">
+        Prosíme, <b>nepoužívej tento formulář na dotazy k úlohám</b>, či k průběhu semináře. Na tyto dotazy slouží diskuze, nebo e-mail <a href="mailto:ksi@fi.muni.cz">ksi@fi.muni.cz</a>. Děkujeme.
+    </div>
+</div>
+
+
+              <p>Máš nějaký tip nebo nápad, co a jak zlepšit? Vyskočila na tebe nějaká chyba?</p>
+
+              <p><b>Dej nám vědět, ať s tím můžeme něco dělat.</b></p>
+
+              <textarea id="feedback-textarea" required="" title="Text je povinný" rows="3" class="form-control autofocus ember-view ember-text-area"><!----></textarea>
+              <br>
+              <p><b>Tvá e-mailová adresa – volitelně</b></p>
+
+              <p>Abychom se mohli doptat na detaily.</p>
+
+              <input id="zpetna-vazba-email" placeholder="e-mail" title="E-mailová adresa je neplatná" type="email" class="form-control ember-view ember-text-field">
+            </div>
+            <div class="modal-footer">
+              <button type="submit" style="width: 200px" class="btn btn-primary ">Odeslat</button>
+              <div style="margin-top:20px">
+                  <!---->
+              </div>
+            </div>
+</form>    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="login-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+  <div class="modal-dialog">
+     <div class="loginmodal-container">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+     <div align="center">
+             <img src="img/karlik_color.png" style="max-width:200px; vertical-align: middle;">
+     </div>
+    <br>
+      <!---->
+<form id="ember761" novalidate="novalidate" class="ember-view">          <div>
+            <input id="login-email" placeholder="e-mail" required="" type="email" class="form-control autofocus ember-view ember-text-field">
+          </div>
+          <div style="margin-top:5px">
+            <input id="ember762" placeholder="heslo" required="" type="password" class="form-control ember-view ember-text-field">
+          </div>
+          <input type="submit" name="login" class="btn btn-primary" value="Přihlas se">
+</form>
+      <div class="login-help">
+      <p data-toggle="modal" data-target="#login-modal" style="margin-left:20px; text-align: right;"><a id="ember763" href="/registrace" class="ember-view">Registrovat se</a> - <a id="ember784" href="/zapomenute-heslo" class="ember-view">Zapomenuté heslo</a></p> <!-- TODO toogle button -->
+      </div>
+     </div>
+  </div>
+</div>
+
+<script src="js/index.js"></script>
+<script src="js/jquery.qtip.js"></script>
+</div><div style="position: absolute; width: 0px; height: 0px; overflow: hidden; padding: 0px; border: 0px none; margin: 0px;"><div id="MathJax_Font_Test" style="position: absolute; visibility: hidden; top: 0px; left: 0px; width: auto; padding: 0px; border: 0px none; margin: 0px; white-space: nowrap; text-align: left; text-indent: 0px; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; font-size: 40px; font-weight: normal; font-style: normal; font-size-adjust: none; font-family: MathJax_Size1, sans-serif;"></div></div></body></html>
